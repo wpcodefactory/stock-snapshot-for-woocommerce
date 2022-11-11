@@ -20,6 +20,7 @@ class Alg_WC_Stock_Snapshot_Core {
 	 * @version 1.2.0
 	 * @since   1.0.0
 	 *
+	 * @todo    [next] (feature) log
 	 * @todo    [later] (feature) hook into every quantity update, i.e. not only scheduled snapshots
 	 */
 	function __construct() {
