@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Action Scheduler Class
  *
- * @version 1.2.0
+ * @version 1.3.2
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -17,7 +17,7 @@ class Alg_WC_Stock_Snapshot_Action_Scheduler {
 	/**
 	 * Constructor.
 	 *
-	 * @version 1.2.0
+	 * @version 1.3.2
 	 * @since   1.2.0
 	 *
 	 * @see     https://actionscheduler.org/
@@ -33,7 +33,7 @@ class Alg_WC_Stock_Snapshot_Action_Scheduler {
 			add_action( 'init', array( $this, 'unschedule_action' ) );
 		}
 		// Plugin deactivation
-		register_deactivation_hook( alg_wc_stock_snapshot()->plugin_file(), array( $this, 'unschedule_action' ) );
+		register_deactivation_hook( ALG_WC_STOCK_SNAPSHOT_FILE, array( $this, 'unschedule_action' ) );
 		// Clearing WP cron (for backward compatibility)
 		wp_clear_scheduled_hook( 'alg_wc_stock_snapshot' );
 	}
