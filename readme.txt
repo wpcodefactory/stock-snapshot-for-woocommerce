@@ -1,9 +1,9 @@
 === Stock Snapshot for WooCommerce ===
-Contributors: wpcodefactory, algoritmika, anbinder, omardabbas, kousikmukherjeeli
+Contributors: wpcodefactory, omardabbas, karzin, anbinder, algoritmika, kousikmukherjeeli
 Tags: woocommerce, stock, woo commerce
 Requires at least: 5.0
-Tested up to: 6.2
-Stable tag: 1.3.3
+Tested up to: 6.3
+Stable tag: 1.3.4
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -39,6 +39,11 @@ Keep track of your products stock in WooCommerce.
 3. Start by visiting plugin settings at "WooCommerce > Settings > Stock Snapshot".
 
 == Changelog ==
+
+= 1.3.4 - 27/09/2023 =
+* WC tested up to: 8.1.
+* Tested up to: 6.3.
+* Update plugin icon, banner.
 
 = 1.3.3 - 19/06/2023 =
 * WC tested up to: 7.8.
