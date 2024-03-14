@@ -28,11 +28,11 @@ msgstr ""
 msgid "No restocked products found."
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot.php:131
+#: includes/class-alg-wc-stock-snapshot.php:153
 msgid "Settings"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot.php:134
+#: includes/class-alg-wc-stock-snapshot.php:156
 msgid "Go Pro"
 msgstr ""
 

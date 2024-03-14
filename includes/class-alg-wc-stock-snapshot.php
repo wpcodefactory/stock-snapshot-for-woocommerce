@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Main Class
  *
- * @version 1.1.0
+ * @version 1.4.0
  * @since   1.0.0
  *
  * @author  Algoritmika Ltd
@@ -49,7 +49,7 @@ final class Alg_WC_Stock_Snapshot {
 	/**
 	 * Alg_WC_Stock_Snapshot Constructor.
 	 *
-	 * @version 1.1.0
+	 * @version 1.4.0
 	 * @since   1.0.0
 	 *
 	 * @access  public
@@ -63,6 +63,9 @@ final class Alg_WC_Stock_Snapshot {
 
 		// Set up localisation
 		add_action( 'init', array( $this, 'localize' ) );
+
+		// Declare compatibility with custom order tables for WooCommerce
+		add_action( 'before_woocommerce_init', array( $this, 'wc_declare_compatibility' ) );
 
 		// Pro
 		if ( 'stock-snapshot-for-woocommerce-pro.php' === basename( ALG_WC_STOCK_SNAPSHOT_FILE ) ) {
@@ -87,6 +90,25 @@ final class Alg_WC_Stock_Snapshot {
 	 */
 	function localize() {
 		load_plugin_textdomain( 'stock-snapshot-for-woocommerce', false, dirname( plugin_basename( ALG_WC_STOCK_SNAPSHOT_FILE ) ) . '/langs/' );
+	}
+
+	/**
+	 * wc_declare_compatibility.
+	 *
+	 * @version 1.4.0
+	 * @since   1.4.0
+	 *
+	 * @see     https://github.com/woocommerce/woocommerce/wiki/High-Performance-Order-Storage-Upgrade-Recipe-Book#declaring-extension-incompatibility
+	 */
+	function wc_declare_compatibility() {
+		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+			$files = ( defined( 'ALG_WC_STOCK_SNAPSHOT_FILE_FREE' ) ?
+				array( ALG_WC_STOCK_SNAPSHOT_FILE, ALG_WC_STOCK_SNAPSHOT_FILE_FREE ) :
+				array( ALG_WC_STOCK_SNAPSHOT_FILE ) );
+			foreach ( $files as $file ) {
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $file, true );
+			}
+		}
 	}
 
 	/**
@@ -153,7 +175,7 @@ final class Alg_WC_Stock_Snapshot {
 	 * @version 1.0.0
 	 * @since   1.0.0
 	 *
-	 * @todo    [next] (dev) delete transients?
+	 * @todo    (dev) delete transients?
 	 */
 	function version_updated() {
 		update_option( 'alg_wc_stock_snapshot_version', $this->version );

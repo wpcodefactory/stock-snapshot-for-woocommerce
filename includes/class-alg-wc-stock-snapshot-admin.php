@@ -86,7 +86,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 	 * @version 1.3.0
 	 * @since   1.3.0
 	 *
-	 * @todo    [next] (feature) optionally show *full* product stock snapshot history
+	 * @todo    (feature) optionally show *full* product stock snapshot history
 	 */
 	function output_stock_snapshot( $product_id ) {
 		$stock_snapshot = get_post_meta( $product_id, '_alg_wc_stock_snapshot', true );
@@ -97,7 +97,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 			$size       = sizeof( $stock_snapshot );
 			foreach ( $stock_snapshot as $time => $stock ) {
 				$i++;
-				if ( 1 === $i || $stock !== $last_stock || $i === $size ) {
+				if ( 1 === $i || $stock !== $last_stock || $size === $i ) {
 					$output    .= '<tr><td>' . date( 'Y-m-d H:i:s', $time ) . '</td><td>' . $stock . '</td></tr>';
 					$last_stock = $stock;
 				}
@@ -114,7 +114,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 	 * @version 1.3.0
 	 * @since   1.0.0
 	 *
-	 * @todo    [next] (dev) `wc_get_formatted_variation()`?
+	 * @todo    (dev) `wc_get_formatted_variation()`?
 	 */
 	function create_stock_snapshot_meta_box() {
 		$this->output_stock_snapshot( get_the_ID() );

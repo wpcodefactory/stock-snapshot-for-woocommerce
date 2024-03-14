@@ -35,15 +35,15 @@ class Alg_WC_Stock_Snapshot_Shortcodes {
 	 * @see     https://github.com/woocommerce/woocommerce/wiki/wc_get_products-and-WC_Product_Query
 	 * @see     https://docs.woocommerce.com/document/woocommerce-shortcodes/
 	 *
-	 * @todo    [now] (dev) `wc_get_products`: variations
-	 * @todo    [next] (dev) `$check_stock`: make `null` optional? (i.e. `$check_stock = ( isset( $stock[ $check_num ] ) ? $stock[ $check_num ] : 0 )`)
-	 * @todo    [later] (dev) `paginate`: "Sort by ..." dropdown may not match `orderby` and `order` atts
-	 * @todo    [later] (dev) `pwb-brand-filter`: list only brands that are really on the page, otherwise the "Max number of brands" widget option must be set to max/all
-	 * @todo    [later] (dev) "filter by price" widget compatibility
-	 * @todo    [later] (dev) `$query_args`: non-empty `_alg_wc_stock_snapshot` meta
-	 * @todo    [later] (dev) `$query_args`: `stock_quantity > 0`
-	 * @todo    [later] (feature) more `ordering` options, e.g. by most restock diff
-	 * @todo    [later] (feature) customizable period by *date* (i.e. instead of `total_snapshots`)
+	 * @todo    (dev) `wc_get_products`: variations
+	 * @todo    (dev) `$check_stock`: make `null` optional? (i.e., `$check_stock = ( isset( $stock[ $check_num ] ) ? $stock[ $check_num ] : 0 )`)
+	 * @todo    (dev) `paginate`: "Sort by ..." dropdown may not match `orderby` and `order` atts
+	 * @todo    (dev) `pwb-brand-filter`: list only brands that are really on the page, otherwise the "Max number of brands" widget option must be set to max/all
+	 * @todo    (dev) "filter by price" widget compatibility
+	 * @todo    (dev) `$query_args`: non-empty `_alg_wc_stock_snapshot` meta
+	 * @todo    (dev) `$query_args`: `stock_quantity > 0`
+	 * @todo    (feature) more `ordering` options, e.g., by most restock diff
+	 * @todo    (feature) customizable period by *date* (i.e., instead of `total_snapshots`)
 	 */
 	function stock_snapshot_restocked_shortcode( $atts, $content = '' ) {
 		// Atts

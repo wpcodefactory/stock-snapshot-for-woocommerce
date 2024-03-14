@@ -3,12 +3,12 @@
 Plugin Name: Stock Snapshot for WooCommerce
 Plugin URI: https://wpfactory.com/item/stock-snapshot-for-woocommerce/
 Description: Keep track of your products stock in WooCommerce.
-Version: 1.3.4
+Version: 1.4.0
 Author: WPFactory
 Author URI: https://wpfactory.com
 Text Domain: stock-snapshot-for-woocommerce
 Domain Path: /langs
-WC tested up to: 8.1
+WC tested up to: 8.6
 */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,7 +17,7 @@ if ( 'stock-snapshot-for-woocommerce.php' === basename( __FILE__ ) ) {
 	/**
 	 * Check if Pro plugin version is activated.
 	 *
-	 * @version 1.1.0
+	 * @version 1.4.0
 	 * @since   1.1.0
 	 */
 	$plugin = 'stock-snapshot-for-woocommerce-pro/stock-snapshot-for-woocommerce-pro.php';
@@ -25,11 +25,12 @@ if ( 'stock-snapshot-for-woocommerce.php' === basename( __FILE__ ) ) {
 		in_array( $plugin, (array) get_option( 'active_plugins', array() ), true ) ||
 		( is_multisite() && array_key_exists( $plugin, (array) get_site_option( 'active_sitewide_plugins', array() ) ) )
 	) {
+		defined( 'ALG_WC_STOCK_SNAPSHOT_FILE_FREE' ) || define( 'ALG_WC_STOCK_SNAPSHOT_FILE_FREE', __FILE__ );
 		return;
 	}
 }
 
-defined( 'ALG_WC_STOCK_SNAPSHOT_VERSION' ) || define( 'ALG_WC_STOCK_SNAPSHOT_VERSION', '1.3.4' );
+defined( 'ALG_WC_STOCK_SNAPSHOT_VERSION' ) || define( 'ALG_WC_STOCK_SNAPSHOT_VERSION', '1.4.0' );
 
 defined( 'ALG_WC_STOCK_SNAPSHOT_FILE' ) || define( 'ALG_WC_STOCK_SNAPSHOT_FILE', __FILE__ );
 

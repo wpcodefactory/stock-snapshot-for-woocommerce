@@ -22,7 +22,7 @@ class Alg_WC_Stock_Snapshot_Action_Scheduler {
 	 *
 	 * @see     https://actionscheduler.org/
 	 *
-	 * @todo    [next] (dev) `wp_clear_scheduled_hook`?
+	 * @todo    (dev) `wp_clear_scheduled_hook`?
 	 */
 	function __construct() {
 		$this->action = 'alg_wc_stock_snapshot_action';
@@ -66,7 +66,7 @@ class Alg_WC_Stock_Snapshot_Action_Scheduler {
 	 * @version 1.2.0
 	 * @since   1.2.0
 	 *
-	 * @todo    [later] (dev) move it somewhere else from the `init` action (`register_activation_hook` won't work because of `plugins_loaded` problem)
+	 * @todo    (dev) move it somewhere else from the `init` action (`register_activation_hook` won't work because of `plugins_loaded` problem)
 	 */
 	function schedule_action() {
 		if (

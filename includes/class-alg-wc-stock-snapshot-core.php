@@ -20,8 +20,8 @@ class Alg_WC_Stock_Snapshot_Core {
 	 * @version 1.2.0
 	 * @since   1.0.0
 	 *
-	 * @todo    [next] (feature) log
-	 * @todo    [later] (feature) hook into every quantity update, i.e. not only scheduled snapshots
+	 * @todo    (feature) log
+	 * @todo    (feature) hook into every quantity update, i.e., not only scheduled snapshots
 	 */
 	function __construct() {
 		// Admin
@@ -77,7 +77,7 @@ class Alg_WC_Stock_Snapshot_Core {
 	 * @version 1.3.0
 	 * @since   1.0.0
 	 *
-	 * @todo    [next] (dev) save each snapshot in a separate meta (i.e. instead of all snapshots in a single array)?
+	 * @todo    (dev) save each snapshot in a separate meta (i.e., instead of all snapshots in a single array)?
 	 */
 	function take_product_stock_snapshot( $product_id, $index, $do_count_children = false ) {
 		if ( ( $product = wc_get_product( $product_id ) ) ) {

@@ -156,7 +156,7 @@ class Alg_WC_Stock_Snapshot_Settings_History extends Alg_WC_Stock_Snapshot_Setti
 	 * @version 1.2.0
 	 * @since   1.2.0
 	 *
-	 * @todo    [next] (dev) No snapshots found: hide "Scale" option then?
+	 * @todo    (dev) No snapshots found: hide "Scale" option then?
 	 */
 	function get_settings() {
 		$this->current_time = time();

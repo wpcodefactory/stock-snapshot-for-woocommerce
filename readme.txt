@@ -1,9 +1,9 @@
 === Stock Snapshot for WooCommerce ===
-Contributors: wpcodefactory, omardabbas, karzin, anbinder, algoritmika, kousikmukherjeeli
+Contributors: wpcodefactory, algoritmika, anbinder, karzin, omardabbas, kousikmukherjeeli
 Tags: woocommerce, stock, woo commerce
 Requires at least: 5.0
-Tested up to: 6.3
-Stable tag: 1.3.4
+Tested up to: 6.4
+Stable tag: 1.4.0
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -32,6 +32,10 @@ Keep track of your products stock in WooCommerce.
 * Thank you for using or trying out one of our plugins!
 * [Visit plugin site](https://wpfactory.com/item/stock-snapshot-for-woocommerce/).
 
+### &#8505; More ###
+
+* The plugin is **"High-Performance Order Storage (HPOS)"** compatible.
+
 == Installation ==
 
 1. Upload the entire plugin folder to the `/wp-content/plugins/` directory.
@@ -40,10 +44,15 @@ Keep track of your products stock in WooCommerce.
 
 == Changelog ==
 
+= 1.4.0 - 14/03/2024 =
+* Dev - "High-Performance Order Storage (HPOS)" compatibility.
+* WC tested up to: 8.6.
+* Tested up to: 6.4.
+
 = 1.3.4 - 27/09/2023 =
 * WC tested up to: 8.1.
 * Tested up to: 6.3.
-* Update plugin icon, banner.
+* Plugin icon, banner updated.
 
 = 1.3.3 - 19/06/2023 =
 * WC tested up to: 7.8.
@@ -68,7 +77,7 @@ Keep track of your products stock in WooCommerce.
 * Dev - Tools - "Take snapshot" tool added.
 * Dev - Tools - "Delete all snapshots" tool added.
 * Dev - General - "Allow snapshots via URL" option added (defaults to `no`).
-* Dev - General - "Periodic snapshots" (defaults to `yes`) and "Interval" (defaults to `86400` seconds, i.e. once daily) options added.
+* Dev - General - "Periodic snapshots" (defaults to `yes`) and "Interval" (defaults to `86400` seconds, i.e., once daily) options added.
 * Dev - General - Add child products stock - Counting zero (`0`) children stock as well now.
 * Dev - Emails - "Email subject" option added.
 * Dev - Emails - "Email heading" option added.
