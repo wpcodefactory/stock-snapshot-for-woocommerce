@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - History Section Settings
  *
- * @version 1.3.0
+ * @version 1.5.0
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -13,6 +13,22 @@ defined( 'ABSPATH' ) || exit;
 if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Settings_History' ) ) :
 
 class Alg_WC_Stock_Snapshot_Settings_History extends Alg_WC_Stock_Snapshot_Settings_Section {
+
+	/**
+	 * after.
+	 *
+	 * @version 1.5.0
+	 * @since   1.5.0
+	 */
+	public $after;
+
+	/**
+	 * current_time.
+	 *
+	 * @version 1.5.0
+	 * @since   1.5.0
+	 */
+	public $current_time;
 
 	/**
 	 * Constructor.

@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Main Class
  *
- * @version 1.4.0
+ * @version 1.5.0
  * @since   1.0.0
  *
  * @author  Algoritmika Ltd
@@ -21,6 +21,14 @@ final class Alg_WC_Stock_Snapshot {
 	 * @since 1.0.0
 	 */
 	public $version = ALG_WC_STOCK_SNAPSHOT_VERSION;
+
+	/**
+	 * core.
+	 *
+	 * @version 1.5.0
+	 * @since   1.5.0
+	 */
+	public $core;
 
 	/**
 	 * @var   Alg_WC_Stock_Snapshot The single instance of the class

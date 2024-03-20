@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Core Class
  *
- * @version 1.3.0
+ * @version 1.5.0
  * @since   1.0.0
  *
  * @author  Algoritmika Ltd
@@ -15,27 +15,41 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Core' ) ) :
 class Alg_WC_Stock_Snapshot_Core {
 
 	/**
+	 * action_scheduler.
+	 *
+	 * @version 1.5.0
+	 * @since   1.5.0
+	 */
+	public $action_scheduler;
+
+	/**
 	 * Constructor.
 	 *
 	 * @version 1.2.0
 	 * @since   1.0.0
 	 *
 	 * @todo    (feature) log
-	 * @todo    (feature) hook into every quantity update, i.e., not only scheduled snapshots
+	 * @todo    (feature) hook into every quantity update ("product saved"?), i.e., not only scheduled snapshots
 	 */
 	function __construct() {
+
 		// Admin
 		require_once( 'class-alg-wc-stock-snapshot-admin.php' );
+
 		// Action Scheduler
 		$this->action_scheduler = require_once( 'class-alg-wc-stock-snapshot-action-scheduler.php' );
+
 		// Snapshots via URL
 		if ( 'yes' === get_option( 'alg_wc_stock_snapshot_plugin_enabled', 'yes' ) && 'yes' === get_option( 'alg_wc_stock_snapshot_url', 'no' ) ) {
 			add_action( 'init', array( $this, 'snapshot_via_url' ) );
 		}
+
 		// Shortcodes
 		require_once( 'class-alg-wc-stock-snapshot-shortcodes.php' );
+
 		// Core loaded
 		do_action( 'alg_wc_stock_snapshot_core_loaded' );
+
 	}
 
 	/**

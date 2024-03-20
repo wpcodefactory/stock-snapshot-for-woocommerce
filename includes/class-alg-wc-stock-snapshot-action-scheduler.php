@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Action Scheduler Class
  *
- * @version 1.3.2
+ * @version 1.5.0
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -13,6 +13,14 @@ defined( 'ABSPATH' ) || exit;
 if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Action_Scheduler' ) ) :
 
 class Alg_WC_Stock_Snapshot_Action_Scheduler {
+
+	/**
+	 * action.
+	 *
+	 * @version 1.5.0
+	 * @since   1.5.0
+	 */
+	public $action;
 
 	/**
 	 * Constructor.

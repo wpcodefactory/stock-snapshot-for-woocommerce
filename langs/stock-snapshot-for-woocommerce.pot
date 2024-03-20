@@ -1,26 +1,60 @@
-#: includes/class-alg-wc-stock-snapshot-admin.php:48
+#: includes/class-alg-wc-stock-snapshot-admin.php:54
+msgid "Invalid product ID."
+msgstr ""
+
+#: includes/class-alg-wc-stock-snapshot-admin.php:58
+msgid "Invalid user role."
+msgstr ""
+
+#: includes/class-alg-wc-stock-snapshot-admin.php:68
+msgid "Invalid nonce."
+msgstr ""
+
+#: includes/class-alg-wc-stock-snapshot-admin.php:72
+msgid "Invalid product."
+msgstr ""
+
+#: includes/class-alg-wc-stock-snapshot-admin.php:78
+msgid "Date"
+msgstr ""
+
+#: includes/class-alg-wc-stock-snapshot-admin.php:79
+msgid "Time"
+msgstr ""
+
+#: includes/class-alg-wc-stock-snapshot-admin.php:80
+#: includes/pro/class-alg-wc-stock-snapshot-emails.php:129
+#: includes/pro/class-alg-wc-stock-snapshot-emails.php:141
+msgid "Stock"
+msgstr ""
+
+#: includes/class-alg-wc-stock-snapshot-admin.php:125
 #, php-format
 msgid "Snapshot taken for %s product(s)."
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin.php:58
+#: includes/class-alg-wc-stock-snapshot-admin.php:135
 #, php-format
 msgid "%s product snapshots deleted."
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin.php:66
+#: includes/class-alg-wc-stock-snapshot-admin.php:143
 msgid "Plugin transients cleared."
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin.php:80
-#: includes/pro/class-alg-wc-stock-snapshot-emails.php:141
+#: includes/class-alg-wc-stock-snapshot-admin.php:158
+#: includes/pro/class-alg-wc-stock-snapshot-emails.php:157
 #: includes/settings/class-alg-wc-stock-snapshot-settings-emails.php:73
 #: includes/settings/class-alg-wc-stock-snapshot-settings-general.php:80
 #: includes/settings/class-alg-wc-stock-snapshot-settings.php:25
 msgid "Stock Snapshot"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin.php:107
+#: includes/class-alg-wc-stock-snapshot-admin.php:203
+msgid "Export to CSV"
+msgstr ""
+
+#: includes/class-alg-wc-stock-snapshot-admin.php:206
 msgid "No data yet."
 msgstr ""
 
@@ -28,54 +62,49 @@ msgstr ""
 msgid "No restocked products found."
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot.php:153
+#: includes/class-alg-wc-stock-snapshot.php:161
 msgid "Settings"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot.php:156
+#: includes/class-alg-wc-stock-snapshot.php:164
 msgid "Go Pro"
 msgstr ""
 
-#: includes/pro/class-alg-wc-stock-snapshot-emails.php:113
-#: includes/pro/class-alg-wc-stock-snapshot-emails.php:125
+#: includes/pro/class-alg-wc-stock-snapshot-emails.php:129
+#: includes/pro/class-alg-wc-stock-snapshot-emails.php:141
 msgid "SKU"
 msgstr ""
 
-#: includes/pro/class-alg-wc-stock-snapshot-emails.php:113
-#: includes/pro/class-alg-wc-stock-snapshot-emails.php:125
-#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:140
+#: includes/pro/class-alg-wc-stock-snapshot-emails.php:129
+#: includes/pro/class-alg-wc-stock-snapshot-emails.php:141
+#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:156
 msgid "Product"
 msgstr ""
 
-#: includes/pro/class-alg-wc-stock-snapshot-emails.php:113
-#: includes/pro/class-alg-wc-stock-snapshot-emails.php:125
-msgid "Stock"
-msgstr ""
-
-#: includes/pro/class-alg-wc-stock-snapshot-emails.php:113
-#: includes/pro/class-alg-wc-stock-snapshot-emails.php:125
+#: includes/pro/class-alg-wc-stock-snapshot-emails.php:129
+#: includes/pro/class-alg-wc-stock-snapshot-emails.php:141
 msgid "Previous"
 msgstr ""
 
-#: includes/pro/class-alg-wc-stock-snapshot-emails.php:117
+#: includes/pro/class-alg-wc-stock-snapshot-emails.php:133
 msgid "No changes in stock."
 msgstr ""
 
-#: includes/pro/class-alg-wc-stock-snapshot-emails.php:129
+#: includes/pro/class-alg-wc-stock-snapshot-emails.php:145
 msgid "No products."
 msgstr ""
 
-#: includes/pro/class-alg-wc-stock-snapshot-emails.php:134
+#: includes/pro/class-alg-wc-stock-snapshot-emails.php:150
 #: includes/settings/class-alg-wc-stock-snapshot-settings-emails.php:82
 msgid "Stock Changes"
 msgstr ""
 
-#: includes/pro/class-alg-wc-stock-snapshot-emails.php:136
+#: includes/pro/class-alg-wc-stock-snapshot-emails.php:152
 #: includes/settings/class-alg-wc-stock-snapshot-settings-emails.php:84
 msgid "All Stock"
 msgstr ""
 
-#: includes/pro/class-alg-wc-stock-snapshot-emails.php:148
+#: includes/pro/class-alg-wc-stock-snapshot-emails.php:164
 #: includes/settings/class-alg-wc-stock-snapshot-settings-emails.php:67
 msgid "{site_title} - Stock Snapshot - {date}"
 msgstr ""
@@ -215,50 +244,50 @@ msgstr ""
 msgid "%s shortcode allows you to display recently restocked products."
 msgstr ""
 
-#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:25
+#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:41
 msgid "History"
 msgstr ""
 
-#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:42
+#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:58
 #, php-format
 msgid "Last %d day"
 msgid_plural "Last %d days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:143
+#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:159
 msgid "No snapshots found."
 msgstr ""
 
-#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:166
+#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:182
 msgid "Snapshots"
 msgstr ""
 
-#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:172
+#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:188
 msgid "Scale"
 msgstr ""
 
-#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:178
+#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:194
 msgid "Years"
 msgstr ""
 
-#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:179
+#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:195
 msgid "Months"
 msgstr ""
 
-#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:180
+#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:196
 msgid "Days"
 msgstr ""
 
-#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:181
+#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:197
 msgid "Hours"
 msgstr ""
 
-#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:182
+#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:198
 msgid "Minutes"
 msgstr ""
 
-#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:183
+#: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:199
 msgid "Seconds"
 msgstr ""
 
