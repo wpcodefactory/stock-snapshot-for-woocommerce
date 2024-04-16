@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Settings
  *
- * @version 1.2.0
+ * @version 1.6.0
  * @since   1.0.0
  *
  * @author  Algoritmika Ltd
@@ -94,13 +94,14 @@ class Alg_WC_Stock_Snapshot_Settings extends WC_Settings_Page {
 	/**
 	 * save.
 	 *
-	 * @version 1.1.3
+	 * @version 1.6.0
 	 * @since   1.0.0
 	 */
 	function save() {
 		parent::save();
 		do_action( 'alg_wc_stock_snapshot_settings_saved' );
 		$this->maybe_reset_settings();
+		do_action( 'alg_wc_stock_snapshot_after_settings_saved' );
 	}
 
 }
