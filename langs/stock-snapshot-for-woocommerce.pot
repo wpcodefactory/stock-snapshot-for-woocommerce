@@ -1,3 +1,39 @@
+# Copyright (C) 2024 WPFactory
+# This file is distributed under the same license as the Stock Snapshot for WooCommerce Pro plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: stock-snapshot-for-woocommerce 1.6.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/stock-snapshot-for-woocommerce\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-07-31T08:10:59+02:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.9.0\n"
+"X-Domain: stock-snapshot-for-woocommerce\n"
+
+#. Plugin Name of the plugin
+msgid "Stock Snapshot for WooCommerce Pro"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://wpfactory.com/item/stock-snapshot-for-woocommerce/"
+msgstr ""
+
+#. Description of the plugin
+msgid "Keep track of your products stock in WooCommerce."
+msgstr ""
+
+#. Author of the plugin
+msgid "WPFactory"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://wpfactory.com"
+msgstr ""
+
 #: includes/class-alg-wc-stock-snapshot-admin.php:54
 msgid "Invalid product ID."
 msgstr ""
@@ -31,12 +67,10 @@ msgid "Stock"
 msgstr ""
 
 #: includes/class-alg-wc-stock-snapshot-admin.php:125
-#, php-format
 msgid "Snapshot taken for %s product(s)."
 msgstr ""
 
 #: includes/class-alg-wc-stock-snapshot-admin.php:135
-#, php-format
 msgid "%s product snapshots deleted."
 msgstr ""
 
@@ -62,10 +96,6 @@ msgstr ""
 
 #: includes/class-alg-wc-stock-snapshot-shortcodes.php:58
 msgid "No restocked products found."
-msgstr ""
-
-#: includes/class-alg-wc-stock-snapshot.php:161
-msgid "Settings"
 msgstr ""
 
 #: includes/class-alg-wc-stock-snapshot.php:164
@@ -146,7 +176,6 @@ msgstr ""
 
 #: includes/settings/class-alg-wc-stock-snapshot-settings-emails.php:64
 #: includes/settings/class-alg-wc-stock-snapshot-settings-emails.php:78
-#, php-format
 msgid "Available placeholders: %s"
 msgstr ""
 
@@ -163,19 +192,14 @@ msgid "General"
 msgstr ""
 
 #: includes/settings/class-alg-wc-stock-snapshot-settings-general.php:46
-#, php-format
-msgid ""
-"Crons are disabled on your site! You need to enable them by setting %s "
-"constant to %s."
+msgid "Crons are disabled on your site! You need to enable them by setting %s constant to %s."
 msgstr ""
 
 #: includes/settings/class-alg-wc-stock-snapshot-settings-general.php:52
-#, php-format
 msgid "Next stock snapshot is scheduled at %s (current server time is %s)."
 msgstr ""
 
 #: includes/settings/class-alg-wc-stock-snapshot-settings-general.php:54
-#, php-format
 msgid "Plugin uses %s to take the stock snapshots periodically."
 msgstr ""
 
@@ -184,11 +208,7 @@ msgid "Action Scheduler"
 msgstr ""
 
 #: includes/settings/class-alg-wc-stock-snapshot-settings-general.php:56
-#, php-format
-msgid ""
-"Action Scheduler has a built in <a href=\"%s\" target=\"_blank"
-"\">administration screen</a> for monitoring, debugging and manually "
-"triggering scheduled actions. Search for the %s hook there."
+msgid "Action Scheduler has a built in <a href=\"%s\" target=\"_blank\">administration screen</a> for monitoring, debugging and manually triggering scheduled actions. Search for the %s hook there."
 msgstr ""
 
 #: includes/settings/class-alg-wc-stock-snapshot-settings-general.php:74
@@ -212,7 +232,6 @@ msgid "Allow snapshots via URL"
 msgstr ""
 
 #: includes/settings/class-alg-wc-stock-snapshot-settings-general.php:103
-#, php-format
 msgid "If enabled, you can take the snapshot with %s"
 msgstr ""
 
@@ -233,8 +252,7 @@ msgid "Append variations"
 msgstr ""
 
 #: includes/settings/class-alg-wc-stock-snapshot-settings-general.php:128
-msgid ""
-"Append variations stock to the main variable product's stock in snapshots."
+msgid "Append variations stock to the main variable product's stock in snapshots."
 msgstr ""
 
 #: includes/settings/class-alg-wc-stock-snapshot-settings-general.php:142
@@ -242,7 +260,6 @@ msgid "Shortcodes"
 msgstr ""
 
 #: includes/settings/class-alg-wc-stock-snapshot-settings-general.php:143
-#, php-format
 msgid "%s shortcode allows you to display recently restocked products."
 msgstr ""
 
@@ -251,7 +268,6 @@ msgid "History"
 msgstr ""
 
 #: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:211
-#, php-format
 msgid "Last %d day"
 msgid_plural "Last %d days"
 msgstr[0] ""
@@ -266,12 +282,10 @@ msgid "export"
 msgstr ""
 
 #: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:406
-#, php-format
 msgid "From %s"
 msgstr ""
 
 #: includes/settings/class-alg-wc-stock-snapshot-settings-history.php:408
-#, php-format
 msgid "to %s"
 msgstr ""
 
