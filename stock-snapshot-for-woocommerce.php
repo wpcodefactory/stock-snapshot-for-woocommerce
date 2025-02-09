@@ -1,15 +1,17 @@
 <?php
 /*
-Plugin Name: Stock Snapshot for WooCommerce
+Plugin Name: Stock History & Reports Manager for WooCommerce
 Plugin URI: https://wpfactory.com/item/stock-snapshot-for-woocommerce/
 Description: Keep track of your products stock in WooCommerce.
-Version: 1.6.1
+Version: 2.0.0-dev
 Author: WPFactory
 Author URI: https://wpfactory.com
 Text Domain: stock-snapshot-for-woocommerce
 Domain Path: /langs
-WC tested up to: 9.1
+WC tested up to: 9.6
 Requires Plugins: woocommerce
+License: GNU General Public License v3.0
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
@@ -24,18 +26,21 @@ if ( 'stock-snapshot-for-woocommerce.php' === basename( __FILE__ ) ) {
 	$plugin = 'stock-snapshot-for-woocommerce-pro/stock-snapshot-for-woocommerce-pro.php';
 	if (
 		in_array( $plugin, (array) get_option( 'active_plugins', array() ), true ) ||
-		( is_multisite() && array_key_exists( $plugin, (array) get_site_option( 'active_sitewide_plugins', array() ) ) )
+		(
+			is_multisite() &&
+			array_key_exists( $plugin, (array) get_site_option( 'active_sitewide_plugins', array() ) )
+		)
 	) {
 		defined( 'ALG_WC_STOCK_SNAPSHOT_FILE_FREE' ) || define( 'ALG_WC_STOCK_SNAPSHOT_FILE_FREE', __FILE__ );
 		return;
 	}
 }
 
-defined( 'ALG_WC_STOCK_SNAPSHOT_VERSION' ) || define( 'ALG_WC_STOCK_SNAPSHOT_VERSION', '1.6.1' );
+defined( 'ALG_WC_STOCK_SNAPSHOT_VERSION' ) || define( 'ALG_WC_STOCK_SNAPSHOT_VERSION', '2.0.0-dev-20250209-2214' );
 
 defined( 'ALG_WC_STOCK_SNAPSHOT_FILE' ) || define( 'ALG_WC_STOCK_SNAPSHOT_FILE', __FILE__ );
 
-require_once( 'includes/class-alg-wc-stock-snapshot.php' );
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-alg-wc-stock-snapshot.php';
 
 if ( ! function_exists( 'alg_wc_stock_snapshot' ) ) {
 	/**

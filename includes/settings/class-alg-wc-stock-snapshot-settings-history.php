@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - History Section Settings
  *
- * @version 1.6.0
+ * @version 2.0.0
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -64,11 +64,14 @@ class Alg_WC_Stock_Snapshot_Settings_History extends Alg_WC_Stock_Snapshot_Setti
 	function init() {
 
 		$this->current_time = time();
-		$this->after        = ( ! empty( $_GET['after'] ) ?
+
+		$this->after  = (
+			! empty( $_GET['after'] ) ?
 			strtotime( wc_clean( $_GET['after'] ) ) :
 			strtotime( date( 'Y-m-d', ( $this->current_time - 7 * DAY_IN_SECONDS ) ) ) // default: "Last 7 days"
 		);
-		$this->before       = ( ! empty( $_GET['before'] ) ?
+		$this->before = (
+			! empty( $_GET['before'] ) ?
 			strtotime( wc_clean( $_GET['before'] ) ) :
 			false
 		);
@@ -254,9 +257,19 @@ class Alg_WC_Stock_Snapshot_Settings_History extends Alg_WC_Stock_Snapshot_Setti
 	}
 
 	/**
+	 * get_admin.
+	 *
+	 * @version 2.0.0
+	 * @since   2.0.0
+	 */
+	function get_admin() {
+		return alg_wc_stock_snapshot()->core->admin;
+	}
+
+	/**
 	 * get_data.
 	 *
-	 * @version 1.6.0
+	 * @version 2.0.0
 	 * @since   1.2.0
 	 */
 	function get_data( $output_type = 'html' ) {
@@ -324,8 +337,24 @@ class Alg_WC_Stock_Snapshot_Settings_History extends Alg_WC_Stock_Snapshot_Setti
 			foreach ( $time as $_time ) {
 				$date = date( $date_points, $_time );
 				if ( isset( $stock_snapshot[ $_time ] ) ) {
-					$row[ $date ] = $stock_snapshot[ $_time ];
-					$do_add_row   = true;
+					$_stock_snapshot = $stock_snapshot[ $_time ];
+					$do_add_row      = true;
+					$row[ $date ]    = (
+						is_array( $_stock_snapshot ) ?
+						$_stock_snapshot['stock'] :
+						$_stock_snapshot
+					);
+					if (
+						'html' === $output_type &&
+						is_array( $_stock_snapshot ) &&
+						isset( $_stock_snapshot['hook'] ) &&
+						isset( $_stock_snapshot['user_id'] )
+					) {
+						$row[ $date ] .= wc_help_tip(
+							$this->get_admin()->get_hook_desc( $_stock_snapshot['hook'] ) .
+							' (' . $this->get_admin()->get_user_desc( $_stock_snapshot['user_id'] ) . ')'
+						);
+					}
 				} elseif ( ! isset( $row[ $date ] ) ) {
 					$row[ $date ] = '-';
 				}

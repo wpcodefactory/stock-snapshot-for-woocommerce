@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Admin Class
  *
- * @version 1.5.0
+ * @version 2.0.0
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -38,9 +38,19 @@ class Alg_WC_Stock_Snapshot_Admin {
 	}
 
 	/**
+	 * get_core.
+	 *
+	 * @version 2.0.0
+	 * @since   2.0.0
+	 */
+	function get_core() {
+		return alg_wc_stock_snapshot()->core;
+	}
+
+	/**
 	 * export_csv.
 	 *
-	 * @version 1.5.0
+	 * @version 2.0.0
 	 * @since   1.5.0
 	 */
 	function export_csv() {
@@ -81,11 +91,25 @@ class Alg_WC_Stock_Snapshot_Admin {
 		);
 		if ( ( $stock_snapshot = $product->get_meta( '_alg_wc_stock_snapshot' ) ) ) {
 			foreach ( $stock_snapshot as $time => $stock ) {
-				$csv[] = sprintf( '%s,%s,%s',
-					date( 'Y-m-d', $time ),
-					date( 'H:i:s', $time ),
-					$stock
-				);
+				if ( $this->get_core()->do_extra_data() ) {
+					// Extra data
+					$csv[] = sprintf(
+						'%s,%s,%s,%s,%s',
+						date( 'Y-m-d', $time ),
+						date( 'H:i:s', $time ),
+						( $stock['stock']   ?? $stock ),
+						( isset( $stock['hook'] )    ? '"' . $this->get_hook_desc( $stock['hook'] ) . '"'    : '' ),
+						( isset( $stock['user_id'] ) ? '"' . $this->get_user_desc( $stock['user_id'] ) . '"' : '' )
+					);
+				} else {
+					// Simple
+					$csv[] = sprintf(
+						'%s,%s,%s',
+						date( 'Y-m-d', $time ),
+						date( 'H:i:s', $time ),
+						( $stock['stock'] ?? $stock )
+					);
+				}
 			}
 		}
 		$csv = implode( PHP_EOL, $csv );
@@ -107,7 +131,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 	/**
 	 * admin_tools.
 	 *
-	 * @version 1.3.0
+	 * @version 2.0.0
 	 * @since   1.1.3
 	 *
 	 * @todo    (dev) `current_user_can( 'manage_woocommerce' )`?
@@ -115,14 +139,19 @@ class Alg_WC_Stock_Snapshot_Admin {
 	function admin_tools() {
 
 		// Clearing plugin transients on every settings save
-		alg_wc_stock_snapshot()->core->delete_transients();
+		$this->get_core()->delete_transients();
 
 		// Take snapshot
 		if ( 'yes' === get_option( 'alg_wc_stock_snapshot_tools_take_snapshot', 'no' ) ) {
 			update_option( 'alg_wc_stock_snapshot_tools_take_snapshot', 'no' );
-			$counter = alg_wc_stock_snapshot()->core->take_stock_snapshot( false );
+			$counter = $this->get_core()->take_stock_snapshot( false );
 			if ( method_exists( 'WC_Admin_Settings', 'add_message' ) ) {
-				WC_Admin_Settings::add_message( sprintf( __( 'Snapshot taken for %s product(s).', 'stock-snapshot-for-woocommerce' ), $counter ) );
+				WC_Admin_Settings::add_message(
+					sprintf(
+						__( 'Snapshot taken for %s product(s).', 'stock-snapshot-for-woocommerce' ),
+						$counter
+					)
+				);
 			}
 		}
 
@@ -132,7 +161,12 @@ class Alg_WC_Stock_Snapshot_Admin {
 			global $wpdb;
 			$counter = $wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key = '_alg_wc_stock_snapshot'" );
 			if ( method_exists( 'WC_Admin_Settings', 'add_message' ) ) {
-				WC_Admin_Settings::add_message( sprintf( __( '%s product snapshots deleted.', 'stock-snapshot-for-woocommerce' ), $counter ) );
+				WC_Admin_Settings::add_message(
+					sprintf(
+						__( '%s product snapshots deleted.', 'stock-snapshot-for-woocommerce' ),
+						$counter
+					)
+				);
 			}
 		}
 
@@ -140,7 +174,9 @@ class Alg_WC_Stock_Snapshot_Admin {
 		if ( 'yes' === get_option( 'alg_wc_stock_snapshot_clear_transients', 'no' ) ) {
 			update_option( 'alg_wc_stock_snapshot_clear_transients', 'no' );
 			if ( method_exists( 'WC_Admin_Settings', 'add_message' ) ) {
-				WC_Admin_Settings::add_message( __( 'Plugin transients cleared.', 'stock-snapshot-for-woocommerce' ) );
+				WC_Admin_Settings::add_message(
+					__( 'Plugin transients cleared.', 'stock-snapshot-for-woocommerce' )
+				);
 			}
 		}
 
@@ -149,24 +185,97 @@ class Alg_WC_Stock_Snapshot_Admin {
 	/**
 	 * add_stock_snapshot_meta_box.
 	 *
-	 * @version 1.0.0
+	 * @version 2.0.0
 	 * @since   1.0.0
 	 */
 	function add_stock_snapshot_meta_box() {
+
+		if ( $this->get_core()->do_extra_data() ) {
+			$id      = 'alg-wc-stock-snapshot-full';
+			$context = 'advanced';
+		} else {
+			$id      = 'alg-wc-stock-snapshot';
+			$context = 'side';
+		}
+
 		add_meta_box(
-			'alg-wc-stock-snapshot',
+			$id,
 			__( 'Stock Snapshot', 'stock-snapshot-for-woocommerce' ),
 			array( $this, 'create_stock_snapshot_meta_box' ),
 			'product',
-			'side',
+			$context,
 			'low'
 		);
+
+	}
+
+	/**
+	 * get_hook_desc.
+	 *
+	 * @version 2.0.0
+	 * @since   2.0.0
+	 */
+	function get_hook_desc( $hook ) {
+		switch ( $hook ) {
+
+			case 'woocommerce_update_product':
+				return __( 'Product update', 'stock-snapshot-for-woocommerce' );
+
+			case 'woocommerce_update_product_variation':
+				return __( 'Product variation update', 'stock-snapshot-for-woocommerce' );
+
+			case 'alg_wc_stock_snapshot_settings_saved':
+				return __( 'Manual snapshot', 'stock-snapshot-for-woocommerce' );
+
+			case 'alg_wc_stock_snapshot_action':
+			case $this->get_core()->action_scheduler->action:
+				return __( 'Periodic snapshot', 'stock-snapshot-for-woocommerce' );
+
+			case 'init':
+				return __( 'URL snapshot', 'stock-snapshot-for-woocommerce' );
+
+			default:
+				return $hook;
+
+		}
+	}
+
+	/**
+	 * get_user_desc.
+	 *
+	 * @version 2.0.0
+	 * @since   2.0.0
+	 */
+	function get_user_desc( $user_id ) {
+
+		if (
+			$user_id &&
+			( $user = get_user_by( 'ID', $user_id ) ) &&
+			( $display_name = $user->get( 'display_name' ) )
+		) {
+
+			return $display_name;
+
+		} elseif ( 0 == $user_id ) {
+
+			return __( 'Guest', 'stock-snapshot-for-woocommerce' );
+
+		} else {
+
+			return sprintf(
+				/* Translators: %d: User ID. */
+				__( 'User #%d', 'stock-snapshot-for-woocommerce' ),
+				$user_id
+			);
+
+		}
+
 	}
 
 	/**
 	 * output_stock_snapshot.
 	 *
-	 * @version 1.5.0
+	 * @version 2.0.0
 	 * @since   1.3.0
 	 *
 	 * @todo    (feature) optionally show *full* product stock snapshot history
@@ -178,21 +287,71 @@ class Alg_WC_Stock_Snapshot_Admin {
 		if ( $stock_snapshot ) {
 
 			// Table
-			$output     = '';
+			$output     = array();
 			$last_stock = false;
 			$i          = 0;
 			$size       = sizeof( $stock_snapshot );
+
 			foreach ( $stock_snapshot as $time => $stock ) {
+
+				if ( is_array( $stock ) ) {
+					$hook    = $stock['hook'];
+					$user_id = $stock['user_id'];
+					$stock   = $stock['stock'];
+				} else {
+					$hook    = false;
+					$user_id = false;
+				}
+
 				$i++;
-				if ( 1 === $i || $stock !== $last_stock || $size === $i ) {
-					$output .= '<tr>' .
+
+				if (
+					1 === $i ||
+					$stock !== $last_stock ||
+					$size === $i
+				) {
+
+					$tip = (
+						(
+							! $this->get_core()->do_extra_data() &&
+							false !== $hook &&
+							false !== $user_id
+						) ?
+						wc_help_tip(
+							$this->get_hook_desc( $hook ) .
+							' (' . $this->get_user_desc( $user_id ) . ')'
+						) :
+						''
+					);
+
+					$row = '<tr>' .
 						'<td>' . date( 'Y-m-d H:i:s', $time ) . '</td>' .
-						'<td>' . $stock . '</td>' .
-					'</tr>';
+						'<td>' . $stock . $tip . '</td>';
+					if ( $this->get_core()->do_extra_data() ) {
+						$row .= (
+							'<td>' . ( false !== $hook    ? $this->get_hook_desc( $hook )    : '' ) . '</td>' .
+							'<td>' . ( false !== $user_id ? $this->get_user_desc( $user_id ) : '' ) . '</td>'
+						);
+					}
+					$row .= '</tr>';
+
+					$output[] = $row;
+
 					$last_stock = $stock;
+
 				}
 			}
-			echo '<table class="widefat striped">' . wp_kses_post( $output ) . '</table>';
+			echo '<table class="widefat striped">';
+			if ( $this->get_core()->do_extra_data() ) {
+				echo '<tr>' .
+					'<th>' . esc_html__( 'Time', 'stock-snapshot-for-woocommerce' )  . '</th>' .
+					'<th>' . esc_html__( 'Stock', 'stock-snapshot-for-woocommerce' ) . '</th>' .
+					'<th>' . esc_html__( 'Desc', 'stock-snapshot-for-woocommerce' )  . '</th>' .
+					'<th>' . esc_html__( 'User', 'stock-snapshot-for-woocommerce' )  . '</th>' .
+				'</tr>';
+			}
+			echo wp_kses_post( implode( '', array_reverse( $output ) ) );
+			echo '</table>';
 
 			// "Export to CSV" link
 			$url = wp_nonce_url(
@@ -200,10 +359,17 @@ class Alg_WC_Stock_Snapshot_Admin {
 				"alg_wc_stock_snapshot_export_csv_{$product_id}",
 				'_alg_wc_stock_snapshot_export_csv_nonce'
 			);
-			echo '<p><a href="' . $url . '">' . esc_html__( 'Export to CSV', 'stock-snapshot-for-woocommerce' ) . '</a></p>';
+			echo '<p><a href="' . $url . '">' .
+				esc_html__( 'Export to CSV', 'stock-snapshot-for-woocommerce' ) .
+			'</a></p>';
 
 		} else {
-			echo '<p><em>' . esc_html__( 'No data yet.', 'stock-snapshot-for-woocommerce' ) . '</em></p>';
+
+			// No data
+			echo '<p><em>' .
+				esc_html__( 'No data yet.', 'stock-snapshot-for-woocommerce' ) .
+			'</em></p>';
+
 		}
 
 	}
@@ -211,7 +377,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 	/**
 	 * create_stock_snapshot_meta_box.
 	 *
-	 * @version 1.3.0
+	 * @version 2.0.0
 	 * @since   1.0.0
 	 *
 	 * @todo    (dev) `wc_get_formatted_variation()`?
@@ -223,7 +389,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 
 		// Product variations
 		if (
-			alg_wc_stock_snapshot()->core->do_variations() &&
+			$this->get_core()->do_variations() &&
 			( $product = wc_get_product( get_the_ID() ) ) &&
 			$product->is_type( 'variable' )
 		) {

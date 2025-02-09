@@ -1,8 +1,8 @@
-=== Stock Snapshot for WooCommerce ===
-Contributors: wpcodefactory, algoritmika, anbinder, karzin, omardabbas, kousikmukherjeeli
+=== Stock History & Reports Manager for WooCommerce ===
+Contributors: wpcodefactory, algoritmika, anbinder, karzin, omardabbas
 Tags: woocommerce, stock, stock history, product stock, stock snapshot
 Requires at least: 5.0
-Tested up to: 6.6
+Tested up to: 6.7
 Stable tag: 1.6.1
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -11,7 +11,7 @@ Keep track of your products stock in WooCommerce.
 
 == Description ==
 
-**Stock Snapshot for WooCommerce** plugin lets you keep track of your products stock in WooCommerce.
+**Stock History & Reports Manager for WooCommerce** plugin lets you keep track of your products stock in WooCommerce.
 
 ### &#9989; Main Features ###
 
@@ -24,7 +24,7 @@ Keep track of your products stock in WooCommerce.
 
 ### &#127942; Premium Version ###
 
-[Stock Snapshot for WooCommerce Pro](https://wpfactory.com/item/stock-snapshot-for-woocommerce/) plugin version allows you to get stock snapshot **emails**.
+[Stock History & Reports Manager for WooCommerce Pro](https://wpfactory.com/item/stock-snapshot-for-woocommerce/) plugin version allows you to get stock snapshot **emails**.
 
 ### &#128472; Feedback ###
 
@@ -40,13 +40,27 @@ Keep track of your products stock in WooCommerce.
 
 1. Upload the entire plugin folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the "Plugins" menu in WordPress.
-3. Start by visiting plugin settings at "WooCommerce > Settings > Stock Snapshot".
+3. Start by visiting plugin settings at "WPFactory > Stock Snapshot".
 
 == Changelog ==
+
+= 2.0.0 - 09/02/2025 =
+* Dev - General - "Product update snapshots" option added (defaults to `no`).
+* Dev - General - "Extra data" option added (defaults to `no`).
+* Dev - Admin meta box - Rows reversed.
+* Dev - Plugin settings moved to the "WPFactory" menu.
+* Dev - "Recommendations" added.
+* Dev - "Key Manager" added.
+* Dev - Languages - POT file regenerated with WP-CLI.
+* Dev - Code refactoring.
+* WC tested up to: 9.6.
+* Tested up to: 6.7.
+* Plugin name updated.
 
 = 1.6.1 - 31/07/2024 =
 * WC tested up to: 9.1.
 * Tested up to: 6.6.
+* Requires Plugins: woocommerce.
 
 = 1.6.0 - 16/04/2024 =
 * Dev - History - "Product categories" option added.

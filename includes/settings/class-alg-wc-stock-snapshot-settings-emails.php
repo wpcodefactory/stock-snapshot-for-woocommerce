@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Emails Section Settings
  *
- * @version 1.2.0
+ * @version 2.0.0
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -29,7 +29,7 @@ class Alg_WC_Stock_Snapshot_Settings_Emails extends Alg_WC_Stock_Snapshot_Settin
 	/**
 	 * get_settings.
 	 *
-	 * @version 1.2.0
+	 * @version 2.0.0
 	 * @since   1.2.0
 	 */
 	function get_settings() {
@@ -45,7 +45,7 @@ class Alg_WC_Stock_Snapshot_Settings_Emails extends Alg_WC_Stock_Snapshot_Settin
 				'desc'     => __( 'Enable', 'stock-snapshot-for-woocommerce' ),
 				'desc_tip' => apply_filters( 'alg_wc_stock_snapshot_settings',
 					'<p style="padding:15px;color:black;background-color:white;font-weight:bold;">' .
-						'You will need <a target="_blank" href="https://wpfactory.com/item/stock-snapshot-for-woocommerce/">Stock Snapshot for WooCommerce Pro</a> plugin version to enable this section.' .
+						'You will need <a target="_blank" href="https://wpfactory.com/item/stock-snapshot-for-woocommerce/">Stock History & Reports Manager for WooCommerce Pro</a> plugin version to enable this section.' .
 					'</p>' ),
 				'id'       => 'alg_wc_stock_snapshot_email_enabled',
 				'default'  => 'no',

@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Pro - Shortcodes Class
  *
- * @version 1.2.0
+ * @version 2.0.0
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -22,19 +22,23 @@ class Alg_WC_Stock_Snapshot_Shortcodes {
 	 */
 	function __construct() {
 		if ( 'yes' === get_option( 'alg_wc_stock_snapshot_plugin_enabled', 'yes' ) ) {
-			add_shortcode( 'alg_wc_stock_snapshot_restocked', array( $this, 'stock_snapshot_restocked_shortcode' ) );
+			add_shortcode(
+				'alg_wc_stock_snapshot_restocked',
+				array( $this, 'stock_snapshot_restocked_shortcode' )
+			);
 		}
 	}
 
 	/**
 	 * stock_snapshot_restocked_shortcode.
 	 *
-	 * @version 1.1.3
+	 * @version 2.0.0
 	 * @since   1.1.0
 	 *
 	 * @see     https://github.com/woocommerce/woocommerce/wiki/wc_get_products-and-WC_Product_Query
 	 * @see     https://docs.woocommerce.com/document/woocommerce-shortcodes/
 	 *
+	 * @todo    (dev) `new_stock`: rethink
 	 * @todo    (dev) `wc_get_products`: variations
 	 * @todo    (dev) `$check_stock`: make `null` optional? (i.e., `$check_stock = ( isset( $stock[ $check_num ] ) ? $stock[ $check_num ] : 0 )`)
 	 * @todo    (dev) `paginate`: "Sort by ..." dropdown may not match `orderby` and `order` atts
@@ -89,17 +93,41 @@ class Alg_WC_Stock_Snapshot_Shortcodes {
 					$time  = array_keys( $stock_snapshot );
 					$stock = array_values( $stock_snapshot );
 					if ( 1 == $count ) {
-						if ( 'yes' === $atts['new_stock'] && $stock[0] > 0 ) {
-							$products[] = array( 'product_id' => $product_id, 'time' => $time[0] );
+						$_stock = (
+							is_array( $stock[0] ) ?
+							$stock[0]['stock'] :
+							$stock[0]
+						);
+						if ( 'yes' === $atts['new_stock'] && $_stock > 0 ) {
+							$products[] = array(
+								'product_id' => $product_id,
+								'time'       => $time[0],
+							);
 						}
 					} else {
 						$i      = 1;
 						$latest = $count - 1;
 						while ( $i <= $atts['total_snapshots'] && $i < $count ) {
 							$check_num   = $count - ( $i + 1 );
-							$check_stock = ( isset( $stock[ $check_num ] ) ? $stock[ $check_num ] : 0 );
-							if ( ( $stock[ $latest ] - $check_stock ) >= $atts['min_stock_diff'] ) {
-								$products[] = array( 'product_id' => $product_id, 'time' => $time[ $check_num + 1 ] );
+							$check_stock = (
+								isset( $stock[ $check_num ] ) ?
+								(
+									is_array( $stock[ $check_num ] ) ?
+									$stock[ $check_num ]['stock'] :
+									$stock[ $check_num ]
+								) :
+								0
+							);
+							$stock_latest = (
+								is_array( $stock[ $latest ] ) ?
+								$stock[ $latest ]['stock'] :
+								$stock[ $latest ]
+							);
+							if ( ( $stock_latest - $check_stock ) >= $atts['min_stock_diff'] ) {
+								$products[] = array(
+									'product_id' => $product_id,
+									'time'       => $time[ $check_num + 1 ],
+								);
 								break;
 							}
 							$i++;
@@ -109,7 +137,17 @@ class Alg_WC_Stock_Snapshot_Shortcodes {
 			}
 			// Custom sorting
 			if ( 'last_restocked' === $atts['orderby'] ) {
-				usort( $products, array( $this, ( 'ASC' === $atts['order'] ? 'sort_last_restocked_asc' : 'sort_last_restocked_desc' ) ) );
+				usort(
+					$products,
+					array(
+						$this,
+						(
+							'ASC' === $atts['order'] ?
+							'sort_last_restocked_asc' :
+							'sort_last_restocked_desc'
+						)
+					)
+				);
 			}
 			// Final product ids array
 			$products = wp_list_pluck( $products, 'product_id' );
@@ -125,7 +163,15 @@ class Alg_WC_Stock_Snapshot_Shortcodes {
 		}
 		// Results
 		if ( ! empty( $products ) ) {
-			return do_shortcode( '[products ids="' . implode( ',', $products ) . '" limit="-1" columns="' . $atts['columns'] . '" orderby="post__in" paginate="' . $atts['paginate'] . '"]' );
+			return do_shortcode(
+				'[products' .
+					' ids="' . implode( ',', $products ) . '"' .
+					' limit="-1"' .
+					' columns="' . $atts['columns'] . '"' .
+					' orderby="post__in"' .
+					' paginate="' . $atts['paginate'] . '"' .
+				']'
+			);
 		} else {
 			return $atts['not_found_msg'];
 		}

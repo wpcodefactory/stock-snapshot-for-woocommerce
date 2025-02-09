@@ -33,17 +33,32 @@ class Alg_WC_Stock_Snapshot_Action_Scheduler {
 	 * @todo    (dev) `wp_clear_scheduled_hook`?
 	 */
 	function __construct() {
+
+		// Action name
 		$this->action = 'alg_wc_stock_snapshot_action';
-		if ( 'yes' === get_option( 'alg_wc_stock_snapshot_plugin_enabled', 'yes' ) && 'yes' === get_option( 'alg_wc_stock_snapshot_action_scheduler', 'yes' ) ) {
+
+		if (
+			'yes' === get_option( 'alg_wc_stock_snapshot_plugin_enabled', 'yes' ) &&
+			'yes' === get_option( 'alg_wc_stock_snapshot_action_scheduler', 'yes' )
+		) {
+
+			// Schedule & Run
 			add_action( 'init', array( $this, 'schedule_action' ) );
 			add_action( $this->action, array( $this, 'run_action' ) );
+
 		} else {
+
+			// Unschedule
 			add_action( 'init', array( $this, 'unschedule_action' ) );
+
 		}
+
 		// Plugin deactivation
 		register_deactivation_hook( ALG_WC_STOCK_SNAPSHOT_FILE, array( $this, 'unschedule_action' ) );
+
 		// Clearing WP cron (for backward compatibility)
 		wp_clear_scheduled_hook( 'alg_wc_stock_snapshot' );
+
 	}
 
 	/**

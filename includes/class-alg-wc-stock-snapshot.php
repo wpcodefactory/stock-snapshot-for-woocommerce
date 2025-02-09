@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Main Class
  *
- * @version 1.5.0
+ * @version 2.0.0
  * @since   1.0.0
  *
  * @author  Algoritmika Ltd
@@ -37,7 +37,7 @@ final class Alg_WC_Stock_Snapshot {
 	protected static $_instance = null;
 
 	/**
-	 * Main Alg_WC_Stock_Snapshot Instance
+	 * Main Alg_WC_Stock_Snapshot Instance.
 	 *
 	 * Ensures only one instance of Alg_WC_Stock_Snapshot is loaded or can be loaded.
 	 *
@@ -57,7 +57,7 @@ final class Alg_WC_Stock_Snapshot {
 	/**
 	 * Alg_WC_Stock_Snapshot Constructor.
 	 *
-	 * @version 1.4.0
+	 * @version 2.0.0
 	 * @since   1.0.0
 	 *
 	 * @access  public
@@ -69,6 +69,11 @@ final class Alg_WC_Stock_Snapshot {
 			return;
 		}
 
+		// Load libs
+		if ( is_admin() ) {
+			require_once plugin_dir_path( ALG_WC_STOCK_SNAPSHOT_FILE ) . 'vendor/autoload.php';
+		}
+
 		// Set up localisation
 		add_action( 'init', array( $this, 'localize' ) );
 
@@ -77,7 +82,7 @@ final class Alg_WC_Stock_Snapshot {
 
 		// Pro
 		if ( 'stock-snapshot-for-woocommerce-pro.php' === basename( ALG_WC_STOCK_SNAPSHOT_FILE ) ) {
-			require_once( 'pro/class-alg-wc-stock-snapshot-pro.php' );
+			require_once plugin_dir_path( __FILE__ ) . 'pro/class-alg-wc-stock-snapshot-pro.php';
 		}
 
 		// Include required files
@@ -97,7 +102,11 @@ final class Alg_WC_Stock_Snapshot {
 	 * @since   1.1.0
 	 */
 	function localize() {
-		load_plugin_textdomain( 'stock-snapshot-for-woocommerce', false, dirname( plugin_basename( ALG_WC_STOCK_SNAPSHOT_FILE ) ) . '/langs/' );
+		load_plugin_textdomain(
+			'stock-snapshot-for-woocommerce',
+			false,
+			dirname( plugin_basename( ALG_WC_STOCK_SNAPSHOT_FILE ) ) . '/langs/'
+		);
 	}
 
 	/**
@@ -110,11 +119,17 @@ final class Alg_WC_Stock_Snapshot {
 	 */
 	function wc_declare_compatibility() {
 		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
-			$files = ( defined( 'ALG_WC_STOCK_SNAPSHOT_FILE_FREE' ) ?
+			$files = (
+				defined( 'ALG_WC_STOCK_SNAPSHOT_FILE_FREE' ) ?
 				array( ALG_WC_STOCK_SNAPSHOT_FILE, ALG_WC_STOCK_SNAPSHOT_FILE_FREE ) :
-				array( ALG_WC_STOCK_SNAPSHOT_FILE ) );
+				array( ALG_WC_STOCK_SNAPSHOT_FILE )
+			);
 			foreach ( $files as $file ) {
-				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $file, true );
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+					'custom_order_tables',
+					$file,
+					true
+				);
 			}
 		}
 	}
@@ -122,35 +137,45 @@ final class Alg_WC_Stock_Snapshot {
 	/**
 	 * includes.
 	 *
-	 * @version 1.1.0
+	 * @version 2.0.0
 	 * @since   1.0.0
 	 */
 	function includes() {
 		// Core
-		$this->core = require_once( 'class-alg-wc-stock-snapshot-core.php' );
+		$this->core = require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-core.php';
 	}
 
 	/**
 	 * admin.
 	 *
-	 * @version 1.1.0
+	 * @version 2.0.0
 	 * @since   1.0.0
 	 */
 	function admin() {
+
 		// Action links
 		add_filter( 'plugin_action_links_' . plugin_basename( ALG_WC_STOCK_SNAPSHOT_FILE ), array( $this, 'action_links' ) );
+
+		// "Recommendations" page
+		$this->add_cross_selling_library();
+
+		// WC Settings tab as WPFactory submenu item
+		$this->move_wc_settings_tab_to_wpfactory_menu();
+
 		// Settings
 		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_woocommerce_settings_tab' ) );
+
 		// Version update
 		if ( get_option( 'alg_wc_stock_snapshot_version', '' ) !== $this->version ) {
 			add_action( 'admin_init', array( $this, 'version_updated' ) );
 		}
+
 	}
 
 	/**
 	 * action_links.
 	 *
-	 * @version 1.1.0
+	 * @version 2.0.0
 	 * @since   1.0.0
 	 *
 	 * @param   mixed $links
@@ -158,22 +183,72 @@ final class Alg_WC_Stock_Snapshot {
 	 */
 	function action_links( $links ) {
 		$custom_links = array();
-		$custom_links[] = '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=alg_wc_stock_snapshot' ) . '">' . __( 'Settings', 'woocommerce' ) . '</a>';
+
+		$custom_links[] = '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=alg_wc_stock_snapshot' ) . '">' .
+			__( 'Settings', 'stock-snapshot-for-woocommerce' ) .
+		'</a>';
+
 		if ( 'stock-snapshot-for-woocommerce.php' === basename( ALG_WC_STOCK_SNAPSHOT_FILE ) ) {
 			$custom_links[] = '<a target="_blank" style="font-weight: bold; color: green;" href="https://wpfactory.com/item/stock-snapshot-for-woocommerce/">' .
-				__( 'Go Pro', 'stock-snapshot-for-woocommerce' ) . '</a>';
+				__( 'Go Pro', 'stock-snapshot-for-woocommerce' ) .
+			'</a>';
 		}
+
 		return array_merge( $custom_links, $links );
+	}
+
+	/**
+	 * add_cross_selling_library.
+	 *
+	 * @version 2.0.0
+	 * @since   2.0.0
+	 */
+	function add_cross_selling_library() {
+
+		if ( ! class_exists( '\WPFactory\WPFactory_Cross_Selling\WPFactory_Cross_Selling' ) ) {
+			return;
+		}
+
+		$cross_selling = new \WPFactory\WPFactory_Cross_Selling\WPFactory_Cross_Selling();
+		$cross_selling->setup( array( 'plugin_file_path' => ALG_WC_STOCK_SNAPSHOT_FILE ) );
+		$cross_selling->init();
+
+	}
+
+	/**
+	 * move_wc_settings_tab_to_wpfactory_menu.
+	 *
+	 * @version 2.0.0
+	 * @since   2.0.0
+	 */
+	function move_wc_settings_tab_to_wpfactory_menu() {
+
+		if ( ! class_exists( '\WPFactory\WPFactory_Admin_Menu\WPFactory_Admin_Menu' ) ) {
+			return;
+		}
+
+		$wpfactory_admin_menu = \WPFactory\WPFactory_Admin_Menu\WPFactory_Admin_Menu::get_instance();
+
+		if ( ! method_exists( $wpfactory_admin_menu, 'move_wc_settings_tab_to_wpfactory_menu' ) ) {
+			return;
+		}
+
+		$wpfactory_admin_menu->move_wc_settings_tab_to_wpfactory_menu( array(
+			'wc_settings_tab_id' => 'alg_wc_stock_snapshot',
+			'menu_title'         => __( 'Stock Snapshot', 'stock-snapshot-for-woocommerce' ),
+			'page_title'         => __( 'Stock Snapshot', 'stock-snapshot-for-woocommerce' ),
+		) );
+
 	}
 
 	/**
 	 * add_woocommerce_settings_tab.
 	 *
-	 * @version 1.1.0
+	 * @version 2.0.0
 	 * @since   1.0.0
 	 */
 	function add_woocommerce_settings_tab( $settings ) {
-		$settings[] = require_once( 'settings/class-alg-wc-stock-snapshot-settings.php' );
+		$settings[] = require_once plugin_dir_path( __FILE__ ) . 'settings/class-alg-wc-stock-snapshot-settings.php';
 		return $settings;
 	}
 
