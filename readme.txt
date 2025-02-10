@@ -3,7 +3,7 @@ Contributors: wpcodefactory, algoritmika, anbinder, karzin, omardabbas
 Tags: woocommerce, stock, stock history, product stock, stock snapshot
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 1.6.1
+Stable tag: 2.0.0
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -44,9 +44,10 @@ Keep track of your products stock in WooCommerce.
 
 == Changelog ==
 
-= 2.0.0 - 09/02/2025 =
+= 2.0.0 - 10/02/2025 =
 * Dev - General - "Product update snapshots" option added (defaults to `no`).
 * Dev - General - "Extra data" option added (defaults to `no`).
+* Dev - Stock adjustment info added.
 * Dev - Admin meta box - Rows reversed.
 * Dev - Plugin settings moved to the "WPFactory" menu.
 * Dev - "Recommendations" added.

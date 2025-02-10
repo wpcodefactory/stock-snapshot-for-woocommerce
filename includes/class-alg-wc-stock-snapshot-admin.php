@@ -84,30 +84,45 @@ class Alg_WC_Stock_Snapshot_Admin {
 
 		// Data
 		$csv = array();
-		$csv[] = sprintf( '%s,%s,%s',
-			esc_html__( 'Date', 'stock-snapshot-for-woocommerce' ),
-			esc_html__( 'Time', 'stock-snapshot-for-woocommerce' ),
-			esc_html__( 'Stock', 'stock-snapshot-for-woocommerce' )
-		);
+		if ( $this->get_core()->do_extra_data() ) {
+			// Extra data
+			$csv[] = sprintf( '%s,%s,%s,%s,%s',
+				esc_html__( 'Date', 'stock-snapshot-for-woocommerce' ),
+				esc_html__( 'Time', 'stock-snapshot-for-woocommerce' ),
+				esc_html__( 'Stock', 'stock-snapshot-for-woocommerce' ),
+				esc_html__( 'Desc', 'stock-snapshot-for-woocommerce' ),
+				esc_html__( 'User', 'stock-snapshot-for-woocommerce' )
+			);
+		} else {
+			// Simple
+			$csv[] = sprintf( '%s,%s,%s',
+				esc_html__( 'Date', 'stock-snapshot-for-woocommerce' ),
+				esc_html__( 'Time', 'stock-snapshot-for-woocommerce' ),
+				esc_html__( 'Stock', 'stock-snapshot-for-woocommerce' )
+			);
+		}
 		if ( ( $stock_snapshot = $product->get_meta( '_alg_wc_stock_snapshot' ) ) ) {
 			foreach ( $stock_snapshot as $time => $stock ) {
+				$formatted_date = date( 'Y-m-d', $time );
+				$formatted_time = date( 'H:i:s', $time );
+				$_stock         = ( is_array( $stock ) ? $stock['stock'] : $stock );
 				if ( $this->get_core()->do_extra_data() ) {
 					// Extra data
 					$csv[] = sprintf(
 						'%s,%s,%s,%s,%s',
-						date( 'Y-m-d', $time ),
-						date( 'H:i:s', $time ),
-						( $stock['stock']   ?? $stock ),
-						( isset( $stock['hook'] )    ? '"' . $this->get_hook_desc( $stock['hook'] ) . '"'    : '' ),
-						( isset( $stock['user_id'] ) ? '"' . $this->get_user_desc( $stock['user_id'] ) . '"' : '' )
+						$formatted_date,
+						$formatted_time,
+						$_stock,
+						( is_array( $stock ) ? '"' . $this->get_hook_desc( $stock['hook'] ) . '"'    : '' ),
+						( is_array( $stock ) ? '"' . $this->get_user_desc( $stock['user_id'] ) . '"' : '' )
 					);
 				} else {
 					// Simple
 					$csv[] = sprintf(
 						'%s,%s,%s',
-						date( 'Y-m-d', $time ),
-						date( 'H:i:s', $time ),
-						( $stock['stock'] ?? $stock )
+						$formatted_date,
+						$formatted_time,
+						$_stock,
 					);
 				}
 			}
@@ -191,7 +206,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 	function add_stock_snapshot_meta_box() {
 
 		if ( $this->get_core()->do_extra_data() ) {
-			$id      = 'alg-wc-stock-snapshot-full';
+			$id      = 'alg-wc-stock-snapshot-extra-data';
 			$context = 'advanced';
 		} else {
 			$id      = 'alg-wc-stock-snapshot';
@@ -216,6 +231,11 @@ class Alg_WC_Stock_Snapshot_Admin {
 	 * @since   2.0.0
 	 */
 	function get_hook_desc( $hook ) {
+
+		if ( false === $hook ) {
+			return '';
+		}
+
 		switch ( $hook ) {
 
 			case 'woocommerce_update_product':
@@ -238,6 +258,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 				return $hook;
 
 		}
+
 	}
 
 	/**
@@ -247,6 +268,10 @@ class Alg_WC_Stock_Snapshot_Admin {
 	 * @since   2.0.0
 	 */
 	function get_user_desc( $user_id ) {
+
+		if ( false === $user_id ) {
+			return '';
+		}
 
 		if (
 			$user_id &&
@@ -282,18 +307,21 @@ class Alg_WC_Stock_Snapshot_Admin {
 	 */
 	function output_stock_snapshot( $product_id ) {
 
+		// Get product's stock snapshot
 		$stock_snapshot = get_post_meta( $product_id, '_alg_wc_stock_snapshot', true );
 
 		if ( $stock_snapshot ) {
 
-			// Table
+			// Vars
 			$output     = array();
 			$last_stock = false;
 			$i          = 0;
 			$size       = sizeof( $stock_snapshot );
 
+			// Loop
 			foreach ( $stock_snapshot as $time => $stock ) {
 
+				// Extra data vs. Simple
 				if ( is_array( $stock ) ) {
 					$hook    = $stock['hook'];
 					$user_id = $stock['user_id'];
@@ -303,51 +331,101 @@ class Alg_WC_Stock_Snapshot_Admin {
 					$user_id = false;
 				}
 
+				// Row counter
 				$i++;
 
+				// Add row
 				if (
 					1 === $i ||
 					$stock !== $last_stock ||
 					$size === $i
 				) {
 
-					$tip = (
-						(
-							! $this->get_core()->do_extra_data() &&
-							false !== $hook &&
-							false !== $user_id
-						) ?
-						wc_help_tip(
-							$this->get_hook_desc( $hook ) .
-							' (' . $this->get_user_desc( $user_id ) . ')'
-						) :
-						''
-					);
+					// Time
+					$formatted_time = date( 'Y-m-d H:i:s', $time );
 
-					$row = '<tr>' .
-						'<td>' . date( 'Y-m-d H:i:s', $time ) . '</td>' .
-						'<td>' . $stock . $tip . '</td>';
-					if ( $this->get_core()->do_extra_data() ) {
-						$row .= (
-							'<td>' . ( false !== $hook    ? $this->get_hook_desc( $hook )    : '' ) . '</td>' .
-							'<td>' . ( false !== $user_id ? $this->get_user_desc( $user_id ) : '' ) . '</td>'
-						);
+					// Stock adjustment
+					$diff = ( (int) $stock - (int) $last_stock );
+					if ( 0 != $diff ) {
+						$class     = 'alg_wc_stock_snapshot_' . ( $diff > 0 ? 'green' : 'red' );
+						$diff_html = '<span class="' . $class . '">' .
+							$diff .
+						'</span>';
+					} else {
+						$diff_html = '';
 					}
-					$row .= '</tr>';
 
+					if ( $this->get_core()->do_extra_data() ) { // Extra data view
+
+						// Row
+						$row = '<tr>' .
+							'<td>' . $formatted_time . '</td>' .
+							'<td>' . $stock . '</td>' .
+							'<td>' . $diff_html . '</td>' .
+							'<td>' . $this->get_hook_desc( $hook ) . '</td>' .
+							'<td>' . $this->get_user_desc( $user_id ) . '</td>' .
+						'</tr>';
+
+					} else { // Simple view
+
+						// Stock adjustment
+						if ( '' !== $diff_html ) {
+							$diff_html = " ({$diff_html})";
+						}
+
+						// Extra data (tip)
+						$tip = (
+							(
+								false !== $hook &&
+								false !== $user_id
+							) ?
+							wc_help_tip(
+								$this->get_hook_desc( $hook ) .
+								' (' . $this->get_user_desc( $user_id ) . ')'
+							) :
+							''
+						);
+
+						// Row
+						$row = '<tr>' .
+							'<td>' . $formatted_time . '</td>' .
+							'<td>' . $stock . $diff_html . $tip . '</td>' .
+						'</tr>';
+
+					}
+
+					// Add row
 					$output[] = $row;
 
+					// Last stock
 					$last_stock = $stock;
 
 				}
+
 			}
+
+			// Style
+			?>
+			<style>
+				.alg_wc_stock_snapshot_red {
+					color: red;
+				}
+				.alg_wc_stock_snapshot_green {
+					color: green;
+				}
+			</style>
+			<?php
+
+			// Table
 			echo '<table class="widefat striped">';
 			if ( $this->get_core()->do_extra_data() ) {
+				// Extra data
 				echo '<tr>' .
-					'<th>' . esc_html__( 'Time', 'stock-snapshot-for-woocommerce' )  . '</th>' .
-					'<th>' . esc_html__( 'Stock', 'stock-snapshot-for-woocommerce' ) . '</th>' .
-					'<th>' . esc_html__( 'Desc', 'stock-snapshot-for-woocommerce' )  . '</th>' .
-					'<th>' . esc_html__( 'User', 'stock-snapshot-for-woocommerce' )  . '</th>' .
+					'<th>' . esc_html__( 'Time', 'stock-snapshot-for-woocommerce' )       . '</th>' .
+					'<th>' . esc_html__( 'Stock', 'stock-snapshot-for-woocommerce' )      . '</th>' .
+					'<th>' . esc_html__( 'Adjustment', 'stock-snapshot-for-woocommerce' ) . '</th>' .
+					'<th>' . esc_html__( 'Desc', 'stock-snapshot-for-woocommerce' )       . '</th>' .
+					'<th>' . esc_html__( 'User', 'stock-snapshot-for-woocommerce' )       . '</th>' .
 				'</tr>';
 			}
 			echo wp_kses_post( implode( '', array_reverse( $output ) ) );
