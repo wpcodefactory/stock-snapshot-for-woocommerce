@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - History Section Settings
  *
- * @version 2.0.0
+ * @version 2.0.1
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -68,7 +68,12 @@ class Alg_WC_Stock_Snapshot_Settings_History extends Alg_WC_Stock_Snapshot_Setti
 		$this->after  = (
 			! empty( $_GET['after'] ) ?
 			strtotime( wc_clean( $_GET['after'] ) ) :
-			strtotime( date( 'Y-m-d', ( $this->current_time - 7 * DAY_IN_SECONDS ) ) ) // default: "Last 7 days"
+			strtotime(
+				date(
+					'Y-m-d',
+					( $this->current_time - 7 * DAY_IN_SECONDS ) // default: "Last 7 days"
+				)
+			)
 		);
 		$this->before = (
 			! empty( $_GET['before'] ) ?
@@ -208,10 +213,25 @@ class Alg_WC_Stock_Snapshot_Settings_History extends Alg_WC_Stock_Snapshot_Setti
 		$after = date( 'Y-m-d', $this->after );
 		foreach ( array( 1, 7, 14, 30, 60, 90, 120, 150, 180, 360 ) as $days  ) {
 			$date   = date( 'Y-m-d', ( $this->current_time - $days * DAY_IN_SECONDS ) );
-			$style  = ( $after === $date && ( ! $this->before || date( 'Y-m-d', $this->before ) === date( 'Y-m-d', $this->current_time ) ) ?
-				' font-weight: 600; color: #000;' : '' );
+			$style  = (
+				(
+					$after === $date &&
+					(
+						! $this->before ||
+						date( 'Y-m-d', $this->before ) === date( 'Y-m-d', $this->current_time )
+					)
+				) ?
+				' font-weight: 600; color: #000;' :
+				''
+			);
 			$menu[] = '<a href="' . add_query_arg( array( 'after' => $date, 'before' => '' ) ) . '" style="text-decoration: none;' . $style . '">' .
-				esc_html( sprintf( _n( 'Last %d day', 'Last %d days', $days, 'stock-snapshot-for-woocommerce' ), number_format_i18n( $days ) ) ) . '</a>';
+				esc_html(
+					sprintf(
+						_n( 'Last %d day', 'Last %d days', $days, 'stock-snapshot-for-woocommerce' ),
+						number_format_i18n( $days )
+					)
+				) .
+			'</a>';
 		}
 		$menu = '<p>' . implode( ' | ', $menu ) . '</p>';
 
@@ -269,7 +289,7 @@ class Alg_WC_Stock_Snapshot_Settings_History extends Alg_WC_Stock_Snapshot_Setti
 	/**
 	 * get_data.
 	 *
-	 * @version 2.0.0
+	 * @version 2.0.1
 	 * @since   1.2.0
 	 */
 	function get_data( $output_type = 'html' ) {
@@ -432,10 +452,17 @@ class Alg_WC_Stock_Snapshot_Settings_History extends Alg_WC_Stock_Snapshot_Setti
 		// Footer
 		if ( 'html' === $output_type ) {
 			$footer = '';
-			$footer .= sprintf( esc_html__( 'From %s', 'stock-snapshot-for-woocommerce' ), date( 'Y-m-d H:i:s', $this->after ) );
+			$footer .= sprintf(
+				esc_html__( 'From %s', 'stock-snapshot-for-woocommerce' ),
+				date( 'Y-m-d H:i:s', $this->after )
+			);
 			if ( $this->before ) {
-				$footer .= ' ' . sprintf( esc_html__( 'to %s', 'stock-snapshot-for-woocommerce' ), date( 'Y-m-d H:i:s', ( $this->before - 1 ) ) );
+				$footer .= ' ' . sprintf(
+					esc_html__( 'to %s', 'stock-snapshot-for-woocommerce' ),
+					date( 'Y-m-d H:i:s', ( $this->before - 1 ) )
+				);
 			}
+			$footer .= ' (' . date_default_timezone_get() . ')';
 			$result .= "<p><em><small>{$footer}</small></em></p>";
 		}
 

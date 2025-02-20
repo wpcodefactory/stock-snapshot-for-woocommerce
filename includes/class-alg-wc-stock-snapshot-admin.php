@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Admin Class
  *
- * @version 2.0.0
+ * @version 2.0.1
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -50,7 +50,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 	/**
 	 * export_csv.
 	 *
-	 * @version 2.0.0
+	 * @version 2.0.1
 	 * @since   1.5.0
 	 */
 	function export_csv() {
@@ -103,8 +103,8 @@ class Alg_WC_Stock_Snapshot_Admin {
 		}
 		if ( ( $stock_snapshot = $product->get_meta( '_alg_wc_stock_snapshot' ) ) ) {
 			foreach ( $stock_snapshot as $time => $stock ) {
-				$formatted_date = date( 'Y-m-d', $time );
-				$formatted_time = date( 'H:i:s', $time );
+				$formatted_date = alg_wc_stock_snapshot()->core->local_date( 'Y-m-d', $time );
+				$formatted_time = alg_wc_stock_snapshot()->core->local_date( 'H:i:s', $time );
 				$_stock         = ( is_array( $stock ) ? $stock['stock'] : $stock );
 				if ( $this->get_core()->do_extra_data() ) {
 					// Extra data
@@ -300,7 +300,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 	/**
 	 * output_stock_snapshot.
 	 *
-	 * @version 2.0.0
+	 * @version 2.0.1
 	 * @since   1.3.0
 	 *
 	 * @todo    (feature) optionally show *full* product stock snapshot history
@@ -342,7 +342,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 				) {
 
 					// Time
-					$formatted_time = date( 'Y-m-d H:i:s', $time );
+					$formatted_time = alg_wc_stock_snapshot()->core->local_date( 'Y-m-d H:i:s', $time );
 
 					// Stock adjustment
 					$diff = ( (int) $stock - (int) $last_stock );

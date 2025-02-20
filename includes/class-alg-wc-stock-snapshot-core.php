@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Core Class
  *
- * @version 2.0.0
+ * @version 2.0.1
  * @since   1.0.0
  *
  * @author  Algoritmika Ltd
@@ -79,6 +79,26 @@ class Alg_WC_Stock_Snapshot_Core {
 		// Core loaded
 		do_action( 'alg_wc_stock_snapshot_core_loaded' );
 
+	}
+
+	/**
+	 * local_date.
+	 *
+	 * @version 2.0.1
+	 * @since   2.0.1
+	 */
+	function local_date( $format, $timestamp = false ) {
+		return get_date_from_gmt(
+			gmdate(
+				'Y-m-d H:i:s',
+				(
+					false === $timestamp ?
+					time() :
+					$timestamp
+				)
+			),
+			$format
+		);
 	}
 
 	/**

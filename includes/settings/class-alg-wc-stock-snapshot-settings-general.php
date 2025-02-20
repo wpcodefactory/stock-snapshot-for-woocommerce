@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - General Section Settings
  *
- * @version 2.0.0
+ * @version 2.0.1
  * @since   1.0.0
  *
  * @author  Algoritmika Ltd
@@ -29,7 +29,7 @@ class Alg_WC_Stock_Snapshot_Settings_General extends Alg_WC_Stock_Snapshot_Setti
 	/**
 	 * get_action_scheduler_info.
 	 *
-	 * @version 1.2.0
+	 * @version 2.0.1
 	 * @since   1.2.0
 	 */
 	function get_action_scheduler_info() {
@@ -61,9 +61,10 @@ class Alg_WC_Stock_Snapshot_Settings_General extends Alg_WC_Stock_Snapshot_Setti
 
 			$info .= (
 				sprintf(
-					__( 'Next stock snapshot is scheduled at %s (current server time is %s).', 'stock-snapshot-for-woocommerce' ),
-					'<code>' . date( 'Y-m-d H:i:s', $next_scheduled ) . '</code>',
-					'<code>' . date( 'Y-m-d H:i:s' ) . '</code>'
+					/* Translators: %1$s: Formatted date, %2$s: Formatted date. */
+					__( 'Next stock snapshot is scheduled at %1$s (current time is %2$s).', 'stock-snapshot-for-woocommerce' ),
+					'<code>' . alg_wc_stock_snapshot()->core->local_date( 'Y-m-d H:i:s', $next_scheduled ) . '</code>',
+					'<code>' . alg_wc_stock_snapshot()->core->local_date( 'Y-m-d H:i:s' ) . '</code>'
 				) .
 				'<br>* ' .
 				sprintf(

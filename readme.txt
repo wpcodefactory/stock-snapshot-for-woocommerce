@@ -3,7 +3,7 @@ Contributors: wpcodefactory, algoritmika, anbinder, karzin, omardabbas
 Tags: woocommerce, stock, stock history, product stock, stock snapshot
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -43,6 +43,9 @@ Keep track of your products stock in WooCommerce.
 3. Start by visiting plugin settings at "WPFactory > Stock Snapshot".
 
 == Changelog ==
+
+= 2.0.1 - 20/02/2025 =
+* Dev - Display dates in the timezone of the site (except the "History" section).
 
 = 2.0.0 - 10/02/2025 =
 * Dev - General - "Product update snapshots" option added (defaults to `no`).
