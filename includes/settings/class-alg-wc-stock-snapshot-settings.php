@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Settings
  *
- * @version 2.0.0
+ * @version 2.1.0
  * @since   1.0.0
  *
  * @author  Algoritmika Ltd
@@ -17,7 +17,7 @@ class Alg_WC_Stock_Snapshot_Settings extends WC_Settings_Page {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.0.0
+	 * @version 2.1.0
 	 * @since   1.0.0
 	 */
 	function __construct() {
@@ -28,8 +28,10 @@ class Alg_WC_Stock_Snapshot_Settings extends WC_Settings_Page {
 
 		// Sections
 		require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-section.php';
+		require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-report-section.php';
 		require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-general.php';
 		require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-tools.php';
+		require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-report.php';
 		require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-history.php';
 		require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-emails.php';
 
@@ -38,11 +40,18 @@ class Alg_WC_Stock_Snapshot_Settings extends WC_Settings_Page {
 	/**
 	 * get_settings.
 	 *
-	 * @version 1.0.0
+	 * @version 2.1.0
 	 * @since   1.0.0
 	 */
 	function get_settings() {
 		global $current_section;
+
+		if ( 'report' === $current_section ) {
+			global $hide_save_button;
+			$hide_save_button = true;
+			return apply_filters( 'woocommerce_get_settings_' . $this->id . '_' . $current_section, array() );
+		}
+
 		return array_merge(
 			apply_filters( 'woocommerce_get_settings_' . $this->id . '_' . $current_section, array() ),
 			array(
@@ -65,6 +74,7 @@ class Alg_WC_Stock_Snapshot_Settings extends WC_Settings_Page {
 				),
 			)
 		);
+
 	}
 
 	/**

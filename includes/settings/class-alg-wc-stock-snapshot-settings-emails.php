@@ -29,14 +29,14 @@ class Alg_WC_Stock_Snapshot_Settings_Emails extends Alg_WC_Stock_Snapshot_Settin
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.0.0
+	 * @version 2.1.0
 	 * @since   1.2.0
 	 */
 	function get_settings() {
 		return array(
 			array(
 				'title'             => __( 'Email Options', 'stock-snapshot-for-woocommerce' ),
-				'desc'              => __( 'Stock snapshot report emails (periodic, URL, manual).', 'stock-snapshot-for-woocommerce' ),
+				'desc'              => __( 'Stock snapshot (periodic, URL, manual) report emails.', 'stock-snapshot-for-woocommerce' ),
 				'type'              => 'title',
 				'id'                => 'alg_wc_stock_snapshot_email_options',
 			),
@@ -67,6 +67,7 @@ class Alg_WC_Stock_Snapshot_Settings_Emails extends Alg_WC_Stock_Snapshot_Settin
 			array(
 				'title'             => __( 'Email subject', 'stock-snapshot-for-woocommerce' ),
 				'desc'              => sprintf(
+					/* Translators: %s: Placeholder list. */
 					__( 'Available placeholders: %s', 'stock-snapshot-for-woocommerce' ),
 					'<code>' . implode( '</code>, <code>',
 						array(
@@ -88,6 +89,7 @@ class Alg_WC_Stock_Snapshot_Settings_Emails extends Alg_WC_Stock_Snapshot_Settin
 			array(
 				'title'             => __( 'Email content', 'stock-snapshot-for-woocommerce' ),
 				'desc'              => sprintf(
+					/* Translators: %s: Placeholder list. */
 					__( 'Available placeholders: %s', 'stock-snapshot-for-woocommerce' ),
 					'<code>' . implode( '</code>, <code>',
 						array(

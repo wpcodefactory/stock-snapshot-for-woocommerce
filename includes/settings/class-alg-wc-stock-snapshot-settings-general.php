@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - General Section Settings
  *
- * @version 2.0.1
+ * @version 2.1.0
  * @since   1.0.0
  *
  * @author  Algoritmika Ltd
@@ -29,15 +29,12 @@ class Alg_WC_Stock_Snapshot_Settings_General extends Alg_WC_Stock_Snapshot_Setti
 	/**
 	 * get_action_scheduler_info.
 	 *
-	 * @version 2.0.1
+	 * @version 2.1.0
 	 * @since   1.2.0
 	 */
 	function get_action_scheduler_info() {
 
-		if (
-			'no' === get_option( 'alg_wc_stock_snapshot_plugin_enabled', 'yes' ) ||
-			'no' === get_option( 'alg_wc_stock_snapshot_action_scheduler', 'yes' )
-		) {
+		if ( 'no' === get_option( 'alg_wc_stock_snapshot_action_scheduler', 'yes' ) ) {
 			return '';
 		}
 
@@ -48,16 +45,14 @@ class Alg_WC_Stock_Snapshot_Settings_General extends Alg_WC_Stock_Snapshot_Setti
 
 			$info .= '<strong>' .
 				sprintf(
-					__( 'Crons are disabled on your site! You need to enable them by setting %s constant to %s.', 'stock-snapshot-for-woocommerce' ),
+					/* Translators: %1$s: Name of the constant, %2$s: "false". */
+					__( 'Crons are disabled on your site! You need to enable them by setting %1$s constant to %2$s.', 'stock-snapshot-for-woocommerce' ),
 					'<code>' . 'DISABLE_WP_CRON' . '</code>',
 					'<code>' . 'false' . '</code>'
 				) .
 			'</strong>';
 
-		} elseif (
-			( $next_scheduled = as_next_scheduled_action( $action ) ) &&
-			'yes' === get_option( 'alg_wc_stock_snapshot_plugin_enabled', 'yes' )
-		) {
+		} elseif ( ( $next_scheduled = as_next_scheduled_action( $action ) ) ) {
 
 			$info .= (
 				sprintf(
@@ -68,6 +63,7 @@ class Alg_WC_Stock_Snapshot_Settings_General extends Alg_WC_Stock_Snapshot_Setti
 				) .
 				'<br>* ' .
 				sprintf(
+					/* Translators: %s: "Action Scheduler". */
 					__( 'Plugin uses %s to take the stock snapshots periodically.', 'stock-snapshot-for-woocommerce' ),
 					'<a href="https://actionscheduler.org/" target="_blank">' .
 						__( 'Action Scheduler', 'stock-snapshot-for-woocommerce' ) .
@@ -75,7 +71,8 @@ class Alg_WC_Stock_Snapshot_Settings_General extends Alg_WC_Stock_Snapshot_Setti
 				) .
 				' ' .
 				sprintf(
-					__( 'Action Scheduler has a built in <a href="%s" target="_blank">administration screen</a> for monitoring, debugging and manually triggering scheduled actions. Search for the %s hook there.', 'stock-snapshot-for-woocommerce' ),
+					/* Translators: %1$s: URL, %2$s: Hook name. */
+					__( 'Action Scheduler has a built in <a href="%1$s" target="_blank">administration screen</a> for monitoring, debugging and manually triggering scheduled actions. Search for the %2$s hook there.', 'stock-snapshot-for-woocommerce' ),
 					admin_url( 'admin.php?page=wc-status&tab=action-scheduler' ),
 					'<code>' . $action . '</code>'
 				)
@@ -90,73 +87,55 @@ class Alg_WC_Stock_Snapshot_Settings_General extends Alg_WC_Stock_Snapshot_Setti
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.0.0
+	 * @version 2.1.0
 	 * @since   1.0.0
 	 *
-	 * @todo    (dev) `alg_wc_stock_snapshot_product_update`: default to `yes`
-	 * @todo    (dev) `alg_wc_stock_snapshot_extra_data`: default to `yes`?
+	 * @todo    (dev) `alg_wc_stock_snapshot_action_scheduler`: default to `no`?
 	 */
 	function get_settings() {
 
 		$plugin_settings = array(
+
+			// Stock Snapshot Options
 			array(
-				'title'             => __( 'Stock Snapshot Options', 'stock-snapshot-for-woocommerce' ),
-				'type'              => 'title',
-				'desc'              => $this->get_action_scheduler_info(),
-				'id'                => 'alg_wc_stock_snapshot_plugin_options',
+				'title'    => __( 'Stock Snapshot Options', 'stock-snapshot-for-woocommerce' ),
+				'type'     => 'title',
+				'id'       => 'alg_wc_stock_snapshot_plugin_options',
 			),
 			array(
-				'title'             => __( 'Stock Snapshot', 'stock-snapshot-for-woocommerce' ),
-				'desc'              => '<strong>' . __( 'Enable plugin', 'stock-snapshot-for-woocommerce' ) . '</strong>',
-				'id'                => 'alg_wc_stock_snapshot_plugin_enabled',
-				'default'           => 'yes',
-				'type'              => 'checkbox',
+				'title'    => __( 'Product update snapshots', 'stock-snapshot-for-woocommerce' ),
+				'desc_tip' => __( 'Take snapshot on each product update.', 'stock-snapshot-for-woocommerce' ),
+				'desc'     => __( 'Enable', 'stock-snapshot-for-woocommerce' ),
+				'id'       => 'alg_wc_stock_snapshot_product_update',
+				'default'  => 'yes',
+				'type'     => 'checkbox',
 			),
 			array(
-				'title'             => __( 'Periodic snapshots', 'stock-snapshot-for-woocommerce' ),
-				'desc'              => __( 'Enable', 'stock-snapshot-for-woocommerce' ),
-				'id'                => 'alg_wc_stock_snapshot_action_scheduler',
-				'default'           => 'yes',
-				'type'              => 'checkbox',
+				'title'    => __( 'Extra data', 'stock-snapshot-for-woocommerce' ),
+				'desc_tip' => __( 'Collect extra data in stock snapshots, e.g., user ID.', 'stock-snapshot-for-woocommerce' ),
+				'desc'     => __( 'Enable', 'stock-snapshot-for-woocommerce' ),
+				'id'       => 'alg_wc_stock_snapshot_extra_data',
+				'default'  => 'yes',
+				'type'     => 'checkbox',
 			),
 			array(
-				'desc'              => __( 'Interval (in seconds)', 'stock-snapshot-for-woocommerce' ),
-				'id'                => 'alg_wc_stock_snapshot_action_scheduler_interval',
-				'default'           => 24 * HOUR_IN_SECONDS,
-				'type'              => 'number',
-				'custom_attributes' => array( 'min' => 60 ),
-			),
-			array(
-				'title'             => __( 'Allow snapshots via URL', 'stock-snapshot-for-woocommerce' ),
-				'desc'              => __( 'Enable', 'stock-snapshot-for-woocommerce' ),
-				'desc_tip'          => sprintf(
+				'title'    => __( 'Allow snapshots via URL', 'stock-snapshot-for-woocommerce' ),
+				'desc'     => __( 'Enable', 'stock-snapshot-for-woocommerce' ),
+				'desc_tip' => sprintf(
+					/* Translators: %s: URL. */
 					__( 'If enabled, you can take the snapshot with %s', 'stock-snapshot-for-woocommerce' ),
 					'<code>' . add_query_arg( 'alg_wc_stock_snapshot', true, site_url() ) . '</code>'
 				),
-				'id'                => 'alg_wc_stock_snapshot_url',
-				'default'           => 'no',
-				'type'              => 'checkbox',
+				'id'       => 'alg_wc_stock_snapshot_url',
+				'default'  => 'no',
+				'type'     => 'checkbox',
 			),
 			array(
-				'title'             => __( 'Product update snapshots', 'stock-snapshot-for-woocommerce' ),
-				'desc_tip'          => __( 'Take snapshot on each product update.', 'stock-snapshot-for-woocommerce' ),
-				'desc'              => __( 'Enable', 'stock-snapshot-for-woocommerce' ),
-				'id'                => 'alg_wc_stock_snapshot_product_update',
-				'default'           => 'no',
-				'type'              => 'checkbox',
+				'type'     => 'sectionend',
+				'id'       => 'alg_wc_stock_snapshot_plugin_options',
 			),
-			array(
-				'title'             => __( 'Extra data', 'stock-snapshot-for-woocommerce' ),
-				'desc_tip'          => __( 'Collect extra data in stock snapshots, e.g., user ID.', 'stock-snapshot-for-woocommerce' ),
-				'desc'              => __( 'Enable', 'stock-snapshot-for-woocommerce' ),
-				'id'                => 'alg_wc_stock_snapshot_extra_data',
-				'default'           => 'no',
-				'type'              => 'checkbox',
-			),
-			array(
-				'type'              => 'sectionend',
-				'id'                => 'alg_wc_stock_snapshot_plugin_options',
-			),
+
+			// Variable Product Options
 			array(
 				'title'    => __( 'Variable Product Options', 'stock-snapshot-for-woocommerce' ),
 				'type'     => 'title',
@@ -182,12 +161,42 @@ class Alg_WC_Stock_Snapshot_Settings_General extends Alg_WC_Stock_Snapshot_Setti
 				'type'     => 'sectionend',
 				'id'       => 'alg_wc_stock_snapshot_variable_product_options',
 			),
+
+			// Periodic Snapshots Options
+			array(
+				'title'             => __( 'Periodic Snapshots Options', 'stock-snapshot-for-woocommerce' ),
+				'desc'              => $this->get_action_scheduler_info(),
+				'type'              => 'title',
+				'id'                => 'alg_wc_stock_snapshot_action_scheduler_options',
+			),
+			array(
+				'title'             => __( 'Periodic snapshots', 'stock-snapshot-for-woocommerce' ),
+				'desc'              => __( 'Enable', 'stock-snapshot-for-woocommerce' ),
+				'id'                => 'alg_wc_stock_snapshot_action_scheduler',
+				'default'           => 'yes',
+				'type'              => 'checkbox',
+			),
+			array(
+				'desc'              => __( 'Interval (in seconds)', 'stock-snapshot-for-woocommerce' ),
+				'id'                => 'alg_wc_stock_snapshot_action_scheduler_interval',
+				'default'           => 24 * HOUR_IN_SECONDS,
+				'type'              => 'number',
+				'custom_attributes' => array( 'min' => 60 ),
+			),
+			array(
+				'type'              => 'sectionend',
+				'id'                => 'alg_wc_stock_snapshot_action_scheduler_options',
+			),
+
 		);
 
+		// Shortcodes
 		$shortcodes = array(
 			array(
 				'title'    => __( 'Shortcodes', 'stock-snapshot-for-woocommerce' ),
-				'desc'     => sprintf( __( '%s shortcode allows you to display recently restocked products.', 'stock-snapshot-for-woocommerce' ),
+				'desc'     => sprintf(
+					/* Translators: %s: Shortcode name. */
+					__( '%s shortcode allows you to display recently restocked products.', 'stock-snapshot-for-woocommerce' ),
 					'<code>[alg_wc_stock_snapshot_restocked]</code>' ),
 				'type'     => 'title',
 				'id'       => 'alg_wc_stock_snapshot_shortcodes',

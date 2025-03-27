@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Core Class
  *
- * @version 2.0.1
+ * @version 2.1.0
  * @since   1.0.0
  *
  * @author  Algoritmika Ltd
@@ -33,7 +33,7 @@ class Alg_WC_Stock_Snapshot_Core {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.0.0
+	 * @version 2.1.0
 	 * @since   1.0.0
 	 *
 	 * @todo    (feature) log
@@ -47,15 +47,12 @@ class Alg_WC_Stock_Snapshot_Core {
 		$this->action_scheduler = require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-action-scheduler.php';
 
 		// Snapshots via URL
-		if (
-			'yes' === get_option( 'alg_wc_stock_snapshot_plugin_enabled', 'yes' ) &&
-			'yes' === get_option( 'alg_wc_stock_snapshot_url', 'no' )
-		) {
+		if ( 'yes' === get_option( 'alg_wc_stock_snapshot_url', 'no' ) ) {
 			add_action( 'init', array( $this, 'snapshot_via_url' ) );
 		}
 
 		// "Product update" snapshot
-		if ( 'yes' === get_option( 'alg_wc_stock_snapshot_product_update', 'no' ) ) {
+		if ( 'yes' === get_option( 'alg_wc_stock_snapshot_product_update', 'yes' ) ) {
 
 			// Update product
 			add_action(
@@ -84,21 +81,51 @@ class Alg_WC_Stock_Snapshot_Core {
 	/**
 	 * local_date.
 	 *
-	 * @version 2.0.1
+	 * @version 2.1.0
 	 * @since   2.0.1
 	 */
-	function local_date( $format, $timestamp = false ) {
+	function local_date( $format = 'Y-m-d H:i:s', $server_timestamp = false ) {
 		return get_date_from_gmt(
 			gmdate(
 				'Y-m-d H:i:s',
 				(
-					false === $timestamp ?
+					false === $server_timestamp ?
 					time() :
-					$timestamp
+					$server_timestamp
 				)
 			),
 			$format
 		);
+	}
+
+	/**
+	 * local_time.
+	 *
+	 * @version 2.1.0
+	 * @since   2.1.0
+	 */
+	function local_time( $server_timestamp = false ) {
+		return strtotime( $this->local_date( 'Y-m-d H:i:s', $server_timestamp ) );
+	}
+
+	/**
+	 * gmt_date.
+	 *
+	 * @version 2.1.0
+	 * @since   2.1.0
+	 */
+	function gmt_date( $local_timestamp ) {
+		return get_gmt_from_date( date( 'Y-m-d H:i:s', $local_timestamp ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+	}
+
+	/**
+	 * gmt_time.
+	 *
+	 * @version 2.1.0
+	 * @since   2.1.0
+	 */
+	function gmt_time( $local_timestamp ) {
+		return strtotime( $this->gmt_date( $local_timestamp ) );
 	}
 
 	/**
@@ -146,12 +173,13 @@ class Alg_WC_Stock_Snapshot_Core {
 	/**
 	 * delete_transients.
 	 *
-	 * @version 1.2.0
+	 * @version 2.1.0
 	 * @since   1.2.0
 	 */
 	function delete_transients() {
 		delete_transient( 'alg_wc_stock_snapshot_restocked' );
 		delete_transient( 'alg_wc_stock_snapshot_history' );
+		delete_transient( 'alg_wc_stock_snapshot_report' );
 	}
 
 	/**
@@ -189,11 +217,11 @@ class Alg_WC_Stock_Snapshot_Core {
 	/**
 	 * do_extra_data.
 	 *
-	 * @version 2.0.0
+	 * @version 2.1.0
 	 * @since   2.0.0
 	 */
 	function do_extra_data() {
-		return ( 'yes' === get_option( 'alg_wc_stock_snapshot_extra_data', 'no' ) );
+		return ( 'yes' === get_option( 'alg_wc_stock_snapshot_extra_data', 'yes' ) );
 	}
 
 	/**

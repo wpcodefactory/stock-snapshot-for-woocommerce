@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Admin Class
  *
- * @version 2.0.1
+ * @version 2.1.0
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -17,20 +17,16 @@ class Alg_WC_Stock_Snapshot_Admin {
 	/**
 	 * Constructor.
 	 *
-	 * @version 1.5.0
+	 * @version 2.1.0
 	 * @since   1.2.0
 	 */
 	function __construct() {
 
-		if ( 'yes' === get_option( 'alg_wc_stock_snapshot_plugin_enabled', 'yes' ) ) {
+		// Meta box
+		add_action( 'add_meta_boxes', array( $this, 'add_stock_snapshot_meta_box' ) );
 
-			// Meta box
-			add_action( 'add_meta_boxes', array( $this, 'add_stock_snapshot_meta_box' ) );
-
-			// Export CSV
-			add_action( 'admin_init', array( $this, 'export_csv' ) );
-
-		}
+		// Export CSV
+		add_action( 'admin_init', array( $this, 'export_csv' ) );
 
 		// Tools
 		add_action( 'alg_wc_stock_snapshot_settings_saved', array( $this, 'admin_tools' ) );
@@ -50,7 +46,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 	/**
 	 * export_csv.
 	 *
-	 * @version 2.0.1
+	 * @version 2.1.0
 	 * @since   1.5.0
 	 */
 	function export_csv() {
@@ -71,7 +67,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 		if (
 			! isset( $_GET['_alg_wc_stock_snapshot_export_csv_nonce'] ) ||
 			! wp_verify_nonce(
-				$_GET['_alg_wc_stock_snapshot_export_csv_nonce'],
+				sanitize_text_field( wp_unslash( $_GET['_alg_wc_stock_snapshot_export_csv_nonce'] ) ),
 				"alg_wc_stock_snapshot_export_csv_{$product_id}"
 			)
 		) {
@@ -163,6 +159,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 			if ( method_exists( 'WC_Admin_Settings', 'add_message' ) ) {
 				WC_Admin_Settings::add_message(
 					sprintf(
+						/* Translators: %s: Number of products. */
 						__( 'Snapshot taken for %s product(s).', 'stock-snapshot-for-woocommerce' ),
 						$counter
 					)
@@ -174,10 +171,11 @@ class Alg_WC_Stock_Snapshot_Admin {
 		if ( 'yes' === get_option( 'alg_wc_stock_snapshot_tools_delete_snapshots', 'no' ) ) {
 			update_option( 'alg_wc_stock_snapshot_tools_delete_snapshots', 'no' );
 			global $wpdb;
-			$counter = $wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key = '_alg_wc_stock_snapshot'" );
+			$counter = $wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key = '_alg_wc_stock_snapshot'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			if ( method_exists( 'WC_Admin_Settings', 'add_message' ) ) {
 				WC_Admin_Settings::add_message(
 					sprintf(
+						/* Translators: %s: Number of products. */
 						__( '%s product snapshots deleted.', 'stock-snapshot-for-woocommerce' ),
 						$counter
 					)
@@ -264,7 +262,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 	/**
 	 * get_user_desc.
 	 *
-	 * @version 2.0.0
+	 * @version 2.1.0
 	 * @since   2.0.0
 	 */
 	function get_user_desc( $user_id ) {
@@ -279,7 +277,11 @@ class Alg_WC_Stock_Snapshot_Admin {
 			( $display_name = $user->get( 'display_name' ) )
 		) {
 
-			return $display_name;
+			return sprintf(
+				'%s (#%d)',
+				$display_name,
+				$user_id
+			);
 
 		} elseif ( 0 == $user_id ) {
 
@@ -298,9 +300,50 @@ class Alg_WC_Stock_Snapshot_Admin {
 	}
 
 	/**
+	 * get_stock_diff_html.
+	 *
+	 * @version 2.1.0
+	 * @since   2.1.0
+	 */
+	function get_stock_diff_html( $diff ) {
+		if ( 0 != $diff ) {
+
+			$class     = 'alg_wc_stock_snapshot_' . ( $diff > 0 ? 'green' : 'red' );
+			$diff_html = '<span class="' . $class . '">' .
+				$diff .
+			'</span>';
+
+		} else {
+
+			$diff_html = '';
+
+		}
+		return $diff_html;
+	}
+
+	/**
+	 * stock_diff_style.
+	 *
+	 * @version 2.1.0
+	 * @since   2.1.0
+	 */
+	function stock_diff_style() {
+		?>
+		<style>
+			.alg_wc_stock_snapshot_red {
+				color: red;
+			}
+			.alg_wc_stock_snapshot_green {
+				color: green;
+			}
+		</style>
+		<?php
+	}
+
+	/**
 	 * output_stock_snapshot.
 	 *
-	 * @version 2.0.1
+	 * @version 2.1.0
 	 * @since   1.3.0
 	 *
 	 * @todo    (feature) optionally show *full* product stock snapshot history
@@ -345,15 +388,8 @@ class Alg_WC_Stock_Snapshot_Admin {
 					$formatted_time = alg_wc_stock_snapshot()->core->local_date( 'Y-m-d H:i:s', $time );
 
 					// Stock adjustment
-					$diff = ( (int) $stock - (int) $last_stock );
-					if ( 0 != $diff ) {
-						$class     = 'alg_wc_stock_snapshot_' . ( $diff > 0 ? 'green' : 'red' );
-						$diff_html = '<span class="' . $class . '">' .
-							$diff .
-						'</span>';
-					} else {
-						$diff_html = '';
-					}
+					$diff      = ( (int) $stock - (int) $last_stock );
+					$diff_html = $this->get_stock_diff_html( $diff );
 
 					if ( $this->get_core()->do_extra_data() ) { // Extra data view
 
@@ -405,16 +441,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 			}
 
 			// Style
-			?>
-			<style>
-				.alg_wc_stock_snapshot_red {
-					color: red;
-				}
-				.alg_wc_stock_snapshot_green {
-					color: green;
-				}
-			</style>
-			<?php
+			$this->stock_diff_style();
 
 			// Table
 			echo '<table class="widefat striped">';
@@ -437,7 +464,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 				"alg_wc_stock_snapshot_export_csv_{$product_id}",
 				'_alg_wc_stock_snapshot_export_csv_nonce'
 			);
-			echo '<p><a href="' . $url . '">' .
+			echo '<p><a href="' . esc_url( $url ) . '">' .
 				esc_html__( 'Export to CSV', 'stock-snapshot-for-woocommerce' ) .
 			'</a></p>';
 
@@ -455,7 +482,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 	/**
 	 * create_stock_snapshot_meta_box.
 	 *
-	 * @version 2.0.0
+	 * @version 2.1.0
 	 * @since   1.0.0
 	 *
 	 * @todo    (dev) `wc_get_formatted_variation()`?
@@ -472,7 +499,9 @@ class Alg_WC_Stock_Snapshot_Admin {
 			$product->is_type( 'variable' )
 		) {
 			foreach ( $product->get_children() as $child_id ) {
-				echo '<hr><h4>' . wc_get_formatted_variation( wc_get_product( $child_id ) ) . '</h4>';
+				echo '<hr><h4>' .
+					wp_kses_post( wc_get_formatted_variation( wc_get_product( $child_id ) ) ) .
+				'</h4>';
 				$this->output_stock_snapshot( $child_id );
 			}
 		}

@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Tools Section Settings
  *
- * @version 1.2.0
+ * @version 2.1.0
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -29,7 +29,7 @@ class Alg_WC_Stock_Snapshot_Settings_Tools extends Alg_WC_Stock_Snapshot_Setting
 	/**
 	 * get_settings.
 	 *
-	 * @version 1.2.0
+	 * @version 2.1.0
 	 * @since   1.2.0
 	 */
 	function get_settings() {
@@ -51,7 +51,12 @@ class Alg_WC_Stock_Snapshot_Settings_Tools extends Alg_WC_Stock_Snapshot_Setting
 			array(
 				'title'    => __( 'Delete all snapshots', 'stock-snapshot-for-woocommerce' ),
 				'desc'     => __( 'Run', 'stock-snapshot-for-woocommerce' ),
-				'desc_tip' => __( 'Deletes all snapshots. Please note that there is no undo for this tool.', 'stock-snapshot-for-woocommerce' ),
+				'desc_tip' => (
+					__( 'Deletes all snapshots.', 'stock-snapshot-for-woocommerce' ) . ' ' .
+					'<span style="color:red;">' .
+						__( 'Please note that there is no undo for this tool.', 'stock-snapshot-for-woocommerce' ) .
+					'</span>'
+				),
 				'id'       => 'alg_wc_stock_snapshot_tools_delete_snapshots',
 				'default'  => 'no',
 				'type'     => 'checkbox',
@@ -68,7 +73,7 @@ class Alg_WC_Stock_Snapshot_Settings_Tools extends Alg_WC_Stock_Snapshot_Setting
 			array(
 				'title'    => __( 'Clear plugin transients', 'stock-snapshot-for-woocommerce' ),
 				'desc'     => __( 'Run', 'stock-snapshot-for-woocommerce' ),
-				'desc_tip' => __( 'Affects the "History" section, shortcode, etc.', 'stock-snapshot-for-woocommerce' ),
+				'desc_tip' => __( 'Affects the "Report" and "History" sections, shortcode, etc.', 'stock-snapshot-for-woocommerce' ),
 				'id'       => 'alg_wc_stock_snapshot_clear_transients',
 				'default'  => 'no',
 				'type'     => 'checkbox',

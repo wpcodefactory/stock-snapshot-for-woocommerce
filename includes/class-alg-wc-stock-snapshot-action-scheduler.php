@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Action Scheduler Class
  *
- * @version 1.5.0
+ * @version 2.1.0
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -25,7 +25,7 @@ class Alg_WC_Stock_Snapshot_Action_Scheduler {
 	/**
 	 * Constructor.
 	 *
-	 * @version 1.3.2
+	 * @version 2.1.0
 	 * @since   1.2.0
 	 *
 	 * @see     https://actionscheduler.org/
@@ -37,10 +37,7 @@ class Alg_WC_Stock_Snapshot_Action_Scheduler {
 		// Action name
 		$this->action = 'alg_wc_stock_snapshot_action';
 
-		if (
-			'yes' === get_option( 'alg_wc_stock_snapshot_plugin_enabled', 'yes' ) &&
-			'yes' === get_option( 'alg_wc_stock_snapshot_action_scheduler', 'yes' )
-		) {
+		if ( 'yes' === get_option( 'alg_wc_stock_snapshot_action_scheduler', 'yes' ) ) {
 
 			// Schedule & Run
 			add_action( 'init', array( $this, 'schedule_action' ) );

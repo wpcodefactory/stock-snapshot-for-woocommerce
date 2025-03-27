@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Pro - Shortcodes Class
  *
- * @version 2.0.0
+ * @version 2.1.0
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -17,22 +17,20 @@ class Alg_WC_Stock_Snapshot_Shortcodes {
 	/**
 	 * Constructor.
 	 *
-	 * @version 1.2.0
+	 * @version 2.1.0
 	 * @since   1.2.0
 	 */
 	function __construct() {
-		if ( 'yes' === get_option( 'alg_wc_stock_snapshot_plugin_enabled', 'yes' ) ) {
-			add_shortcode(
-				'alg_wc_stock_snapshot_restocked',
-				array( $this, 'stock_snapshot_restocked_shortcode' )
-			);
-		}
+		add_shortcode(
+			'alg_wc_stock_snapshot_restocked',
+			array( $this, 'stock_snapshot_restocked_shortcode' )
+		);
 	}
 
 	/**
 	 * stock_snapshot_restocked_shortcode.
 	 *
-	 * @version 2.0.0
+	 * @version 2.1.0
 	 * @since   1.1.0
 	 *
 	 * @see     https://github.com/woocommerce/woocommerce/wiki/wc_get_products-and-WC_Product_Query
@@ -62,7 +60,7 @@ class Alg_WC_Stock_Snapshot_Shortcodes {
 				'not_found_msg'     => '<p>' . __( 'No restocked products found.', 'stock-snapshot-for-woocommerce' ) . '</p>',
 			), $atts, 'alg_wc_stock_snapshot_restocked' );
 		if ( isset( $_REQUEST['pwb-brand-filter'] ) ) {
-			$atts['pwb-brand-filter'] = wc_clean( $_REQUEST['pwb-brand-filter'] );
+			$atts['pwb-brand-filter'] = sanitize_text_field( wp_unslash( $_REQUEST['pwb-brand-filter'] ) );
 		}
 		// Get products
 		$transient_params = base64_encode( http_build_query( $atts, '', ',' ) );
@@ -76,7 +74,7 @@ class Alg_WC_Stock_Snapshot_Shortcodes {
 					'stock_status' => 'instock',
 				);
 			if ( isset( $atts['pwb-brand-filter'] ) ) {
-				$query_args['tax_query'] = array(
+				$query_args['tax_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 						array(
 							'taxonomy' => 'pwb-brand',
 							'field'    => 'slug',
