@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Admin Class
  *
- * @version 2.1.0
+ * @version 2.1.1
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -17,7 +17,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.1.0
+	 * @version 2.1.1
 	 * @since   1.2.0
 	 */
 	function __construct() {
@@ -31,6 +31,10 @@ class Alg_WC_Stock_Snapshot_Admin {
 		// Tools
 		add_action( 'alg_wc_stock_snapshot_settings_saved', array( $this, 'admin_tools' ) );
 
+		// Report (background)
+		add_action( 'alg_wc_stock_snapshot_report_action', array( $this, 'prepare_report_data' ) );
+		add_action( 'wp_ajax_alg_wc_stock_snapshot_report', array( $this, 'report_ajax' ) );
+
 	}
 
 	/**
@@ -41,6 +45,73 @@ class Alg_WC_Stock_Snapshot_Admin {
 	 */
 	function get_core() {
 		return alg_wc_stock_snapshot()->core;
+	}
+
+	/**
+	 * prepare_report_data.
+	 *
+	 * @version 2.1.1
+	 * @since   2.1.1
+	 */
+	function prepare_report_data( $args ) {
+
+		require_once plugin_dir_path( __FILE__ ) . 'settings/class-alg-wc-stock-snapshot-settings-section.php';
+		require_once plugin_dir_path( __FILE__ ) . 'settings/class-alg-wc-stock-snapshot-settings-report-section.php';
+		$report = require_once plugin_dir_path( __FILE__ ) . 'settings/class-alg-wc-stock-snapshot-settings-report.php';
+
+		$args['do_in_background'] = false;
+		$report->get_raw_data( $args );
+
+	}
+
+	/**
+	 * report_ajax.
+	 *
+	 * @version 2.1.1
+	 * @since   2.1.1
+	 *
+	 * @todo    (v2.1.1) return report HTML
+	 */
+	function report_ajax() {
+
+		$transient_id = http_build_query(
+			array(
+				'user_id'     => (
+					isset( $_REQUEST['user_id'] ) ?
+					sanitize_text_field( wp_unslash( $_REQUEST['user_id'] ) ) :
+					false
+				),
+				'product_cat' => (
+					isset( $_REQUEST['product_cat'] ) ?
+					sanitize_text_field( wp_unslash( $_REQUEST['product_cat'] ) ) :
+					false
+				),
+				'after'       => (
+					isset( $_REQUEST['after'] ) ?
+					sanitize_text_field( wp_unslash( $_REQUEST['after'] ) ) :
+					false
+				),
+				'before'      => (
+					isset( $_REQUEST['before'] ) ?
+					sanitize_text_field( wp_unslash( $_REQUEST['before'] ) ) :
+					false
+				),
+				'do_variations' => $this->get_core()->do_variations(),
+			)
+		);
+
+		$res = (
+			(
+				false !== ( $transient = get_transient( 'alg_wc_stock_snapshot_report_data' ) ) &&
+				isset( $transient[ $transient_id ] )
+			) ?
+			1 :
+			0
+		);
+
+		echo $res;
+		die();
+
 	}
 
 	/**

@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - General Section Settings
  *
- * @version 2.1.0
+ * @version 2.1.1
  * @since   1.0.0
  *
  * @author  Algoritmika Ltd
@@ -87,7 +87,7 @@ class Alg_WC_Stock_Snapshot_Settings_General extends Alg_WC_Stock_Snapshot_Setti
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.1.0
+	 * @version 2.1.1
 	 * @since   1.0.0
 	 *
 	 * @todo    (dev) `alg_wc_stock_snapshot_action_scheduler`: default to `no`?
@@ -186,6 +186,25 @@ class Alg_WC_Stock_Snapshot_Settings_General extends Alg_WC_Stock_Snapshot_Setti
 			array(
 				'type'              => 'sectionend',
 				'id'                => 'alg_wc_stock_snapshot_action_scheduler_options',
+			),
+
+			// Advanced Options
+			array(
+				'title'             => __( 'Advanced Options', 'stock-snapshot-for-woocommerce' ),
+				'type'              => 'title',
+				'id'                => 'alg_wc_stock_snapshot_advanced_options',
+			),
+			array(
+				'title'             => __( 'Prepare reports in background', 'stock-snapshot-for-woocommerce' ),
+				'desc'              => __( 'Enable', 'stock-snapshot-for-woocommerce' ),
+				'desc_tip'          => __( 'Affects the "Report" section.', 'stock-snapshot-for-woocommerce' ),
+				'id'                => 'alg_wc_stock_snapshot_report_do_in_background',
+				'default'           => 'no',
+				'type'              => 'checkbox',
+			),
+			array(
+				'type'              => 'sectionend',
+				'id'                => 'alg_wc_stock_snapshot_advanced_options',
 			),
 
 		);

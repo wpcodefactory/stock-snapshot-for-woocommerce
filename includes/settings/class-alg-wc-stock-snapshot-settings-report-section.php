@@ -495,6 +495,8 @@ class Alg_WC_Stock_Snapshot_Settings_Report_Section extends Alg_WC_Stock_Snapsho
 	 *
 	 * @version 2.1.0
 	 * @since   2.1.0
+	 *
+	 * @todo    (v2.1.1) "Local time is ..." to "Report generated at ..."?
 	 */
 	function get_footer() {
 		$footer = '';

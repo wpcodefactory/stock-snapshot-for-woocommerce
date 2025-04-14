@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Report Section Settings
  *
- * @version 2.1.0
+ * @version 2.1.1
  * @since   2.1.0
  *
  * @author  Algoritmika Ltd
@@ -88,45 +88,61 @@ class Alg_WC_Stock_Snapshot_Settings_Report extends Alg_WC_Stock_Snapshot_Settin
 	}
 
 	/**
-	 * get_data.
+	 * get_raw_data.
 	 *
-	 * @version 2.1.0
-	 * @since   2.1.0
-	 *
-	 * @todo    (v2.1.0) "no user" (vs. "any user")?
-	 * @todo    (v2.1.0) filter by the `hook`?
+	 * @version 2.1.1
+	 * @since   2.1.1
 	 */
-	function get_data( $output_type = 'html' ) {
+	function get_raw_data( $args ) {
 
 		// Try transient
-		if ( 'html' === $output_type ) {
-			$transient_id = http_build_query( array(
-				'user_id'     => $this->user_id,
-				'product_cat' => $this->product_cat,
-				'after'       => $this->after,
-				'before'      => $this->before,
-			) );
-			if ( false !== ( $transient = get_transient( 'alg_wc_stock_snapshot_report' ) ) ) {
-				if ( isset( $transient[ $transient_id ] ) ) {
-					return $transient[ $transient_id ];
-				}
-			} else {
-				$transient = array();
+		$transient_id = http_build_query(
+			array(
+				'user_id'       => $args['user_id'],
+				'product_cat'   => $args['product_cat'],
+				'after'         => $args['after'],
+				'before'        => $args['before'],
+				'do_variations' => alg_wc_stock_snapshot()->core->do_variations(),
+			)
+		);
+		if ( false !== ( $transient = get_transient( 'alg_wc_stock_snapshot_report_data' ) ) ) {
+			if ( isset( $transient[ $transient_id ] ) ) {
+				return $transient[ $transient_id ];
 			}
+		} else {
+			$transient = array();
+		}
+
+		// Do in background
+		if (
+			$args['do_in_background'] &&
+			function_exists( 'as_enqueue_async_action' ) &&
+			function_exists( 'as_has_scheduled_action' )
+		) {
+			if ( ! as_has_scheduled_action(
+				'alg_wc_stock_snapshot_report_action',
+				array( 'args' => $args )
+			) ) {
+				as_enqueue_async_action(
+					'alg_wc_stock_snapshot_report_action',
+					array( 'args' => $args )
+				);
+			}
+			return false;
 		}
 
 		// Product query args
-		$args = array(
+		$product_query_args = array(
 			'return'              => 'ids',
 			'limit'               => -1,
 			'orderby'             => 'name',
 			'order'               => 'ASC',
-			'product_category_id' => $this->product_cat,
+			'product_category_id' => $args['product_cat'],
 		);
 
 		// Prepare rows
 		$rows = array();
-		foreach ( wc_get_products( $args ) as $product_id ) {
+		foreach ( wc_get_products( $product_query_args ) as $product_id ) {
 
 			if ( ! ( $product = wc_get_product( $product_id ) ) ) {
 				continue;
@@ -165,13 +181,13 @@ class Alg_WC_Stock_Snapshot_Settings_Report extends Alg_WC_Stock_Snapshot_Settin
 					$stock = ( is_array( $_snapshot ) ? $_snapshot['stock'] : $_snapshot );
 
 					if (
-						$time >= $this->after &&
-						( ! $this->before || $time < $this->before ) &&
+						$time >= $args['after'] &&
+						( ! $args['before'] || $time < $args['before'] ) &&
 						(
-							empty( $this->user_id ) ||
+							empty( $args['user_id'] ) ||
 							(
 								! empty( $_snapshot['user_id'] ) &&
-								$_snapshot['user_id'] == $this->user_id
+								$_snapshot['user_id'] == $args['user_id']
 							)
 						) &&
 						0 !== ( $diff = ( (int) $stock - (int) $last_stock ) )
@@ -205,8 +221,138 @@ class Alg_WC_Stock_Snapshot_Settings_Report extends Alg_WC_Stock_Snapshot_Settin
 
 		}
 
-		// Table head
+		// Reverse rows
 		if ( ! empty( $rows ) ) {
+			$rows = array_reverse( $rows );
+		}
+
+		// Set transient
+		$transient[ $transient_id ] = $rows;
+		set_transient( 'alg_wc_stock_snapshot_report_data', $transient, 0 );
+
+		// Result
+		return $rows;
+
+	}
+
+	/**
+	 * loader_css_js.
+	 *
+	 * @version 2.1.1
+	 * @since   2.1.1
+	 *
+	 * @todo    (v2.1.1) CSS: rename `spin`?
+	 */
+	function loader_css_js() {
+
+		if (
+			! isset( $_GET['page'], $_GET['tab'], $_GET['section'] ) ||
+			'wc-settings'           !== $_GET['page'] ||
+			'alg_wc_stock_snapshot' !== $_GET['tab'] ||
+			'report'                !== $_GET['section']
+		) {
+			return;
+		}
+
+		?>
+		<script>
+		jQuery( document ).ready( function () {
+			var interval_id = setInterval( function () {
+				jQuery.ajax( {
+					type:     'POST',
+					dataType: 'json',
+					url:      ajaxurl,
+					data:     {
+						action:      'alg_wc_stock_snapshot_report',
+						user_id:     '<?php echo intval( $this->user_id ); ?>',
+						product_cat: '<?php echo intval( $this->product_cat ); ?>',
+						after:       '<?php echo intval( $this->after ); ?>',
+						before:      '<?php echo intval( $this->before ); ?>',
+					},
+					success:  function ( msg ) {
+						if ( msg ) {
+							clearInterval( interval_id );
+							location.reload();
+						}
+					},
+				} );
+			}, 5000 );
+		} );
+		</script>
+		<?php
+
+		?>
+		<style>
+			.alg-wc-stock-snapshot-report-loader {
+				border: 1px solid #3c434a;
+				border-top: 1px solid #f0f0f1;
+				border-radius: 50%;
+				width: 8px;
+				height: 8px;
+				animation: spin 2s linear infinite;
+				display: inline-block;
+			}
+			@keyframes spin {
+				0% {
+					transform: rotate( 0deg );
+				}
+				100% {
+					transform: rotate( 360deg );
+				}
+			}
+			.alg-wc-stock-snapshot-report-loader-wrapper {
+				display: inline-block;
+			}
+		</style>
+		<?php
+
+	}
+
+	/**
+	 * get_data.
+	 *
+	 * @version 2.1.1
+	 * @since   2.1.0
+	 *
+	 * @todo    (v2.1.0) optimize algorithm
+	 * @todo    (v2.1.0) sortable columns, e.g., "Time"
+	 * @todo    (v2.1.0) visually group by product
+	 * @todo    (v2.1.0) "no user" (vs. "any user")?
+	 * @todo    (v2.1.0) filter by the `hook`?
+	 */
+	function get_data( $output_type = 'html' ) {
+
+		// Get data
+		$rows = $this->get_raw_data(
+			array(
+				'user_id'          => $this->user_id,
+				'product_cat'      => $this->product_cat,
+				'after'            => $this->after,
+				'before'           => $this->before,
+				'do_in_background' => (
+					'yes' === get_option( 'alg_wc_stock_snapshot_report_do_in_background', 'no' ) &&
+					'html' === $output_type
+				),
+			)
+		);
+
+		// Output data
+		if ( false === $rows ) {
+
+			// Doing in background
+			add_action( 'admin_footer', array( $this, 'loader_css_js' ) );
+			ob_start();
+			?>
+			<div class="alg-wc-stock-snapshot-report-loader"></div>
+			<p class="alg-wc-stock-snapshot-report-loader-wrapper"><strong><?php
+				esc_html_e( 'Preparing data...', 'stock-snapshot-for-woocommerce' );
+			?></strong></p>
+			<?php
+			$result = ob_get_clean();
+
+		} elseif ( ! empty( $rows ) ) {
+
+			// Table head
 			$head = array(
 				__( 'Product', 'stock-snapshot-for-woocommerce' ),
 				__( 'Time', 'stock-snapshot-for-woocommerce' ),
@@ -216,19 +362,10 @@ class Alg_WC_Stock_Snapshot_Settings_Report extends Alg_WC_Stock_Snapshot_Settin
 				__( 'Desc', 'stock-snapshot-for-woocommerce' ),
 				__( 'User', 'stock-snapshot-for-woocommerce' ),
 			);
-		}
 
-		// Reverse rows
-		if ( ! empty( $rows ) ) {
-			$rows = array_reverse( $rows );
-		}
+			if ( 'html' === $output_type ) {
 
-		// Output
-		if ( 'html' === $output_type ) {
-
-			ob_start();
-
-			if ( ! empty( $rows ) ) {
+				ob_start();
 
 				$this->get_admin()->stock_diff_style();
 
@@ -260,17 +397,12 @@ class Alg_WC_Stock_Snapshot_Settings_Report extends Alg_WC_Stock_Snapshot_Settin
 
 				?></table><?php
 
-			} else {
+				$result = ob_get_clean();
 
-				echo wp_kses_post( $this->get_no_results_html() );
+				// Export link
+				$result .= $this->get_export_csv_link();
 
-			}
-
-			$result = ob_get_clean();
-
-		} else { // 'csv'
-
-			if ( ! empty( $rows ) ) {
+			} else { // 'csv'
 
 				$result = array();
 
@@ -282,18 +414,22 @@ class Alg_WC_Stock_Snapshot_Settings_Report extends Alg_WC_Stock_Snapshot_Settin
 
 				$result = implode( PHP_EOL, $result );
 
-			} else {
+			}
+
+		} else {
+
+			if ( 'html' === $output_type ) {
+
+				ob_start();
+				echo wp_kses_post( $this->get_no_results_html() );
+				$result = ob_get_clean();
+
+			} else { // 'csv'
 
 				$result = '';
 
 			}
-		}
 
-		// Export link
-		if ( 'html' === $output_type ) {
-			if ( ! empty( $rows ) ) {
-				$result .= $this->get_export_csv_link();
-			}
 		}
 
 		// Footer
@@ -301,12 +437,7 @@ class Alg_WC_Stock_Snapshot_Settings_Report extends Alg_WC_Stock_Snapshot_Settin
 			$result .= $this->get_footer();
 		}
 
-		// Set transient
-		if ( 'html' === $output_type ) {
-			$transient[ $transient_id ] = $result;
-			set_transient( 'alg_wc_stock_snapshot_report', $transient, 0 );
-		}
-
+		// Result
 		return $result;
 
 	}

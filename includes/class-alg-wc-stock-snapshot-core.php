@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Core Class
  *
- * @version 2.1.0
+ * @version 2.1.1
  * @since   1.0.0
  *
  * @author  Algoritmika Ltd
@@ -173,13 +173,14 @@ class Alg_WC_Stock_Snapshot_Core {
 	/**
 	 * delete_transients.
 	 *
-	 * @version 2.1.0
+	 * @version 2.1.1
 	 * @since   1.2.0
 	 */
 	function delete_transients() {
 		delete_transient( 'alg_wc_stock_snapshot_restocked' );
 		delete_transient( 'alg_wc_stock_snapshot_history' );
-		delete_transient( 'alg_wc_stock_snapshot_report' );
+		delete_transient( 'alg_wc_stock_snapshot_report_data' );
+		delete_transient( 'alg_wc_stock_snapshot_report' ); // deprecated
 	}
 
 	/**
