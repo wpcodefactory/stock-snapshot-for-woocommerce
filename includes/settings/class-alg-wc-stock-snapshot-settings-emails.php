@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Emails Section Settings
  *
- * @version 2.0.0
+ * @version 2.2.0
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -29,11 +29,15 @@ class Alg_WC_Stock_Snapshot_Settings_Emails extends Alg_WC_Stock_Snapshot_Settin
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.1.0
+	 * @version 2.2.0
 	 * @since   1.2.0
+	 *
+	 * @todo    (v2.2.0) `alg_wc_stock_snapshot_report_emails`: better desc!
 	 */
 	function get_settings() {
 		return array(
+
+			// Email (periodic, URL, manual) options
 			array(
 				'title'             => __( 'Email Options', 'stock-snapshot-for-woocommerce' ),
 				'desc'              => __( 'Stock snapshot (periodic, URL, manual) report emails.', 'stock-snapshot-for-woocommerce' ),
@@ -123,6 +127,55 @@ class Alg_WC_Stock_Snapshot_Settings_Emails extends Alg_WC_Stock_Snapshot_Settin
 				'type'              => 'sectionend',
 				'id'                => 'alg_wc_stock_snapshot_email_options',
 			),
+
+			// Report email options
+			array(
+				'title'             => __( 'Report Email Options', 'stock-snapshot-for-woocommerce' ),
+				'type'              => 'title',
+				'id'                => 'alg_wc_stock_snapshot_report_email_options',
+			),
+			array(
+				'title'             => __( 'Daily report emails', 'stock-snapshot-for-woocommerce' ),
+				'desc'              => __( 'Enable', 'stock-snapshot-for-woocommerce' ),
+				'desc_tip'          => apply_filters(
+					'alg_wc_stock_snapshot_settings',
+					'<p style="padding:15px;color:black;background-color:white;font-weight:bold;">' .
+						'You will need <a target="_blank" href="https://wpfactory.com/item/stock-snapshot-for-woocommerce/">Stock History & Reports Manager for WooCommerce Pro</a> plugin version to enable this section.' .
+					'</p>'
+				),
+				'id'                => 'alg_wc_stock_snapshot_report_emails_enabled',
+				'default'           => 'no',
+				'type'              => 'checkbox',
+				'custom_attributes' => apply_filters(
+					'alg_wc_stock_snapshot_settings',
+					array( 'disabled' => 'disabled' )
+				),
+			),
+			array(
+				'title'             => __( 'Email data', 'stock-snapshot-for-woocommerce' ),
+				'desc'              => (
+					__( 'One email per line.', 'stock-snapshot-for-woocommerce' ) . '<br>' .
+					sprintf(
+						/* Translators: %s: Email data format. */
+						__( 'Format: %s', 'stock-snapshot-for-woocommerce' ),
+						'<code>report type (all, restocked, or restocked_excl_variations)|days|email address|email subject|time</code>'
+					) . '<br>' .
+					sprintf(
+						/* Translators: %s: Email data example. */
+						__( 'E.g.: %s', 'stock-snapshot-for-woocommerce' ),
+						'<code>restocked|1|' . get_option( 'admin_email' ) . '|Last day restocked products|01:00</code>'
+					)
+				),
+				'id'                => 'alg_wc_stock_snapshot_report_emails',
+				'default'           => '',
+				'type'              => 'textarea',
+				'css'               => 'width:100%;height:200px;',
+			),
+			array(
+				'type'              => 'sectionend',
+				'id'                => 'alg_wc_stock_snapshot_report_email_options',
+			),
+
 		);
 	}
 

@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - History Section Settings
  *
- * @version 2.1.0
+ * @version 2.2.0
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -19,6 +19,8 @@ class Alg_WC_Stock_Snapshot_Settings_History extends Alg_WC_Stock_Snapshot_Setti
 	 *
 	 * @version 2.1.0
 	 * @since   1.2.0
+	 *
+	 * @todo    (v2.1.1) prepare data in background
 	 */
 	function __construct() {
 		$this->id   = 'history';
@@ -39,7 +41,7 @@ class Alg_WC_Stock_Snapshot_Settings_History extends Alg_WC_Stock_Snapshot_Setti
 	/**
 	 * get_data.
 	 *
-	 * @version 2.1.0
+	 * @version 2.2.0
 	 * @since   1.2.0
 	 */
 	function get_data( $output_type = 'html' ) {
@@ -121,7 +123,7 @@ class Alg_WC_Stock_Snapshot_Settings_History extends Alg_WC_Stock_Snapshot_Setti
 						isset( $_stock_snapshot['user_id'] )
 					) {
 						$row[ $date ] .= wc_help_tip(
-							$this->get_admin()->get_hook_desc( $_stock_snapshot['hook'] ) .
+							$this->get_admin()->context_desc->get_all( $_stock_snapshot, $product_id ) .
 							' (' . $this->get_admin()->get_user_desc( $_stock_snapshot['user_id'] ) . ')'
 						);
 					}

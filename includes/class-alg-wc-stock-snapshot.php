@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Main Class
  *
- * @version 2.0.0
+ * @version 2.2.0
  * @since   1.0.0
  *
  * @author  Algoritmika Ltd
@@ -115,7 +115,7 @@ final class Alg_WC_Stock_Snapshot {
 	 * @version 1.4.0
 	 * @since   1.4.0
 	 *
-	 * @see     https://github.com/woocommerce/woocommerce/wiki/High-Performance-Order-Storage-Upgrade-Recipe-Book#declaring-extension-incompatibility
+	 * @see     https://developer.woocommerce.com/docs/features/high-performance-order-storage/recipe-book/
 	 */
 	function wc_declare_compatibility() {
 		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
@@ -148,19 +148,22 @@ final class Alg_WC_Stock_Snapshot {
 	/**
 	 * admin.
 	 *
-	 * @version 2.0.0
+	 * @version 2.2.0
 	 * @since   1.0.0
 	 */
 	function admin() {
 
 		// Action links
-		add_filter( 'plugin_action_links_' . plugin_basename( ALG_WC_STOCK_SNAPSHOT_FILE ), array( $this, 'action_links' ) );
+		add_filter(
+			'plugin_action_links_' . plugin_basename( ALG_WC_STOCK_SNAPSHOT_FILE ),
+			array( $this, 'action_links' )
+		);
 
 		// "Recommendations" page
-		$this->add_cross_selling_library();
+		add_action( 'init', array( $this, 'add_cross_selling_library' ) );
 
 		// WC Settings tab as WPFactory submenu item
-		$this->move_wc_settings_tab_to_wpfactory_menu();
+		add_action( 'init', array( $this, 'move_wc_settings_tab_to_wpfactory_menu' ) );
 
 		// Settings
 		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_woocommerce_settings_tab' ) );
@@ -218,7 +221,7 @@ final class Alg_WC_Stock_Snapshot {
 	/**
 	 * move_wc_settings_tab_to_wpfactory_menu.
 	 *
-	 * @version 2.0.0
+	 * @version 2.2.0
 	 * @since   2.0.0
 	 */
 	function move_wc_settings_tab_to_wpfactory_menu() {
@@ -236,7 +239,11 @@ final class Alg_WC_Stock_Snapshot {
 		$wpfactory_admin_menu->move_wc_settings_tab_to_wpfactory_menu( array(
 			'wc_settings_tab_id' => 'alg_wc_stock_snapshot',
 			'menu_title'         => __( 'Stock Snapshot', 'stock-snapshot-for-woocommerce' ),
-			'page_title'         => __( 'Stock Snapshot', 'stock-snapshot-for-woocommerce' ),
+			'page_title'         => __( 'Stock History & Reports Manager for WooCommerce', 'stock-snapshot-for-woocommerce' ),
+			'plugin_icon'        => array(
+				'get_url_method'    => 'wporg_plugins_api',
+				'wporg_plugin_slug' => 'stock-snapshot-for-woocommerce',
+			),
 		) );
 
 	}

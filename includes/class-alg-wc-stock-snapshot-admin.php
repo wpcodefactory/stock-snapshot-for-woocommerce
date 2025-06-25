@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Admin Class
  *
- * @version 2.1.1
+ * @version 2.2.0
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -15,9 +15,17 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Admin' ) ) :
 class Alg_WC_Stock_Snapshot_Admin {
 
 	/**
+	 * context_desc.
+	 *
+	 * @version 2.2.0
+	 * @since   2.2.0
+	 */
+	public $context_desc;
+
+	/**
 	 * Constructor.
 	 *
-	 * @version 2.1.1
+	 * @version 2.2.0
 	 * @since   1.2.0
 	 */
 	function __construct() {
@@ -34,6 +42,9 @@ class Alg_WC_Stock_Snapshot_Admin {
 		// Report (background)
 		add_action( 'alg_wc_stock_snapshot_report_action', array( $this, 'prepare_report_data' ) );
 		add_action( 'wp_ajax_alg_wc_stock_snapshot_report', array( $this, 'report_ajax' ) );
+
+		// Context desc
+		$this->context_desc = require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-admin-context-desc.php';
 
 	}
 
@@ -67,7 +78,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 	/**
 	 * report_ajax.
 	 *
-	 * @version 2.1.1
+	 * @version 2.2.0
 	 * @since   2.1.1
 	 *
 	 * @todo    (v2.1.1) return report HTML
@@ -97,6 +108,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 					false
 				),
 				'do_variations' => $this->get_core()->do_variations(),
+				'version'       => ALG_WC_STOCK_SNAPSHOT_VERSION,
 			)
 		);
 
@@ -117,7 +129,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 	/**
 	 * export_csv.
 	 *
-	 * @version 2.1.0
+	 * @version 2.2.0
 	 * @since   1.5.0
 	 */
 	function export_csv() {
@@ -157,7 +169,9 @@ class Alg_WC_Stock_Snapshot_Admin {
 				esc_html__( 'Date', 'stock-snapshot-for-woocommerce' ),
 				esc_html__( 'Time', 'stock-snapshot-for-woocommerce' ),
 				esc_html__( 'Stock', 'stock-snapshot-for-woocommerce' ),
-				esc_html__( 'Desc', 'stock-snapshot-for-woocommerce' ),
+				esc_html__( 'Action', 'stock-snapshot-for-woocommerce' ),
+				esc_html__( 'Context', 'stock-snapshot-for-woocommerce' ),
+				esc_html__( 'Order ID', 'stock-snapshot-for-woocommerce' ),
 				esc_html__( 'User', 'stock-snapshot-for-woocommerce' )
 			);
 		} else {
@@ -170,8 +184,8 @@ class Alg_WC_Stock_Snapshot_Admin {
 		}
 		if ( ( $stock_snapshot = $product->get_meta( '_alg_wc_stock_snapshot' ) ) ) {
 			foreach ( $stock_snapshot as $time => $stock ) {
-				$formatted_date = alg_wc_stock_snapshot()->core->local_date( 'Y-m-d', $time );
-				$formatted_time = alg_wc_stock_snapshot()->core->local_date( 'H:i:s', $time );
+				$formatted_date = $this->get_core()->local_date( 'Y-m-d', $time );
+				$formatted_time = $this->get_core()->local_date( 'H:i:s', $time );
 				$_stock         = ( is_array( $stock ) ? $stock['stock'] : $stock );
 				if ( $this->get_core()->do_extra_data() ) {
 					// Extra data
@@ -180,7 +194,9 @@ class Alg_WC_Stock_Snapshot_Admin {
 						$formatted_date,
 						$formatted_time,
 						$_stock,
-						( is_array( $stock ) ? '"' . $this->get_hook_desc( $stock['hook'] ) . '"'    : '' ),
+						( is_array( $stock ) ? '"' . $this->context_desc->get_hook_desc( $stock ) . '"' : '' ),
+						( is_array( $stock ) ? '"' . $this->context_desc->get_request_uri_desc( $stock, $product_id ) . '"' : '' ),
+						( is_array( $stock ) ? '"' . $this->context_desc->get_order_id_desc( $stock ) . '"' : '' ),
 						( is_array( $stock ) ? '"' . $this->get_user_desc( $stock['user_id'] ) . '"' : '' )
 					);
 				} else {
@@ -294,47 +310,12 @@ class Alg_WC_Stock_Snapshot_Admin {
 	}
 
 	/**
-	 * get_hook_desc.
-	 *
-	 * @version 2.0.0
-	 * @since   2.0.0
-	 */
-	function get_hook_desc( $hook ) {
-
-		if ( false === $hook ) {
-			return '';
-		}
-
-		switch ( $hook ) {
-
-			case 'woocommerce_update_product':
-				return __( 'Product update', 'stock-snapshot-for-woocommerce' );
-
-			case 'woocommerce_update_product_variation':
-				return __( 'Product variation update', 'stock-snapshot-for-woocommerce' );
-
-			case 'alg_wc_stock_snapshot_settings_saved':
-				return __( 'Manual snapshot', 'stock-snapshot-for-woocommerce' );
-
-			case 'alg_wc_stock_snapshot_action':
-			case $this->get_core()->action_scheduler->action:
-				return __( 'Periodic snapshot', 'stock-snapshot-for-woocommerce' );
-
-			case 'init':
-				return __( 'URL snapshot', 'stock-snapshot-for-woocommerce' );
-
-			default:
-				return $hook;
-
-		}
-
-	}
-
-	/**
 	 * get_user_desc.
 	 *
 	 * @version 2.1.0
 	 * @since   2.0.0
+	 *
+	 * @todo    (v2.2.0) move this to the `Alg_WC_Stock_Snapshot_Admin_Context_Desc`?
 	 */
 	function get_user_desc( $user_id ) {
 
@@ -414,7 +395,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 	/**
 	 * output_stock_snapshot.
 	 *
-	 * @version 2.1.0
+	 * @version 2.2.0
 	 * @since   1.3.0
 	 *
 	 * @todo    (feature) optionally show *full* product stock snapshot history
@@ -433,16 +414,18 @@ class Alg_WC_Stock_Snapshot_Admin {
 			$size       = sizeof( $stock_snapshot );
 
 			// Loop
-			foreach ( $stock_snapshot as $time => $stock ) {
+			foreach ( $stock_snapshot as $time => $data ) {
 
 				// Extra data vs. Simple
-				if ( is_array( $stock ) ) {
-					$hook    = $stock['hook'];
-					$user_id = $stock['user_id'];
-					$stock   = $stock['stock'];
+				if ( is_array( $data ) ) {
+					$hook    = $data['hook'];
+					$user_id = $data['user_id'];
+					$stock   = $data['stock'];
 				} else {
+					$data    = array( 'stock' => $data );
 					$hook    = false;
 					$user_id = false;
+					$stock   = $data['stock'];
 				}
 
 				// Row counter
@@ -456,7 +439,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 				) {
 
 					// Time
-					$formatted_time = alg_wc_stock_snapshot()->core->local_date( 'Y-m-d H:i:s', $time );
+					$formatted_time = $this->get_core()->local_date( 'Y-m-d H:i:s', $time );
 
 					// Stock adjustment
 					$diff      = ( (int) $stock - (int) $last_stock );
@@ -469,7 +452,9 @@ class Alg_WC_Stock_Snapshot_Admin {
 							'<td>' . $formatted_time . '</td>' .
 							'<td>' . $stock . '</td>' .
 							'<td>' . $diff_html . '</td>' .
-							'<td>' . $this->get_hook_desc( $hook ) . '</td>' .
+							'<td>' . $this->context_desc->get_hook_desc( $data ) . '</td>' .
+							'<td>' . $this->context_desc->get_request_uri_desc( $data, $product_id ) . '</td>' .
+							'<td>' . $this->context_desc->get_order_id_desc( $data ) . '</td>' .
 							'<td>' . $this->get_user_desc( $user_id ) . '</td>' .
 						'</tr>';
 
@@ -487,7 +472,7 @@ class Alg_WC_Stock_Snapshot_Admin {
 								false !== $user_id
 							) ?
 							wc_help_tip(
-								$this->get_hook_desc( $hook ) .
+								$this->context_desc->get_all( $data, $product_id ) .
 								' (' . $this->get_user_desc( $user_id ) . ')'
 							) :
 							''
@@ -515,14 +500,16 @@ class Alg_WC_Stock_Snapshot_Admin {
 			$this->stock_diff_style();
 
 			// Table
-			echo '<table class="widefat striped">';
+			echo '<table class="widefat striped fixed">';
 			if ( $this->get_core()->do_extra_data() ) {
 				// Extra data
 				echo '<tr>' .
 					'<th>' . esc_html__( 'Time', 'stock-snapshot-for-woocommerce' )       . '</th>' .
 					'<th>' . esc_html__( 'Stock', 'stock-snapshot-for-woocommerce' )      . '</th>' .
 					'<th>' . esc_html__( 'Adjustment', 'stock-snapshot-for-woocommerce' ) . '</th>' .
-					'<th>' . esc_html__( 'Desc', 'stock-snapshot-for-woocommerce' )       . '</th>' .
+					'<th>' . esc_html__( 'Action', 'stock-snapshot-for-woocommerce' )     . '</th>' .
+					'<th>' . esc_html__( 'Context', 'stock-snapshot-for-woocommerce' )    . '</th>' .
+					'<th>' . esc_html__( 'Order ID', 'stock-snapshot-for-woocommerce' )   . '</th>' .
 					'<th>' . esc_html__( 'User', 'stock-snapshot-for-woocommerce' )       . '</th>' .
 				'</tr>';
 			}

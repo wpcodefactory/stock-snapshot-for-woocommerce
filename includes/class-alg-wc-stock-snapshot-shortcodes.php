@@ -59,8 +59,8 @@ class Alg_WC_Stock_Snapshot_Shortcodes {
 				'order'             => 'ASC',
 				'not_found_msg'     => '<p>' . __( 'No restocked products found.', 'stock-snapshot-for-woocommerce' ) . '</p>',
 			), $atts, 'alg_wc_stock_snapshot_restocked' );
-		if ( isset( $_REQUEST['pwb-brand-filter'] ) ) {
-			$atts['pwb-brand-filter'] = sanitize_text_field( wp_unslash( $_REQUEST['pwb-brand-filter'] ) );
+		if ( isset( $_REQUEST['pwb-brand-filter'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$atts['pwb-brand-filter'] = sanitize_text_field( wp_unslash( $_REQUEST['pwb-brand-filter'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 		// Get products
 		$transient_params = base64_encode( http_build_query( $atts, '', ',' ) );

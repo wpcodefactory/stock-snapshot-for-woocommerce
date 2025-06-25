@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Report Section Settings
  *
- * @version 2.1.0
+ * @version 2.2.0
  * @since   2.1.0
  *
  * @author  Algoritmika Ltd
@@ -47,6 +47,14 @@ class Alg_WC_Stock_Snapshot_Settings_Report_Section extends Alg_WC_Stock_Snapsho
 	public $do_add_product_cat_selector = false;
 
 	/**
+	 * do_add_report_type_selector.
+	 *
+	 * @version 2.2.0
+	 * @since   2.2.0
+	 */
+	public $do_add_report_type_selector = false;
+
+	/**
 	 * user_id.
 	 *
 	 * @version 2.1.0
@@ -61,6 +69,14 @@ class Alg_WC_Stock_Snapshot_Settings_Report_Section extends Alg_WC_Stock_Snapsho
 	 * @since   2.1.0
 	 */
 	public $product_cat;
+
+	/**
+	 * report_type.
+	 *
+	 * @version 2.2.0
+	 * @since   2.2.0
+	 */
+	public $report_type;
 
 	/**
 	 * after.
@@ -100,7 +116,7 @@ class Alg_WC_Stock_Snapshot_Settings_Report_Section extends Alg_WC_Stock_Snapsho
 	/**
 	 * init.
 	 *
-	 * @version 2.1.0
+	 * @version 2.2.0
 	 * @since   2.1.0
 	 *
 	 * @todo    (v2.1.0) nonces
@@ -118,6 +134,13 @@ class Alg_WC_Stock_Snapshot_Settings_Report_Section extends Alg_WC_Stock_Snapsho
 		$this->product_cat = (
 			! empty( $_GET['product_cat'] ) ?
 			(int) $_GET['product_cat'] :
+			false
+		);
+
+		// Report type
+		$this->report_type = (
+			! empty( $_GET['report_type'] ) ?
+			sanitize_text_field( wp_unslash( $_GET['report_type'] ) ) :
 			false
 		);
 
@@ -249,7 +272,7 @@ class Alg_WC_Stock_Snapshot_Settings_Report_Section extends Alg_WC_Stock_Snapsho
 	/**
 	 * custom_dates_admin_js.
 	 *
-	 * @version 2.1.0
+	 * @version 2.2.0
 	 * @since   2.1.0
 	 *
 	 * @see     https://stackoverflow.com/questions/40425682/disable-changes-you-made-may-not-be-saved-pop-up-window
@@ -279,6 +302,9 @@ class Alg_WC_Stock_Snapshot_Settings_Report_Section extends Alg_WC_Stock_Snapsho
 				if ( undefined !== jQuery( '#alg_wc_stock_snapshot_report_product_cat' ).val() ) {
 					url.searchParams.set( 'product_cat', jQuery( '#alg_wc_stock_snapshot_report_product_cat' ).val() );
 				}
+				if ( undefined !== jQuery( '#alg_wc_stock_snapshot_report_type' ).val() ) {
+					url.searchParams.set( 'report_type', jQuery( '#alg_wc_stock_snapshot_report_type' ).val() );
+				}
 				url.searchParams.set( 'after',  jQuery( '#alg_wc_stock_snapshot_report_date_after'  ).val() );
 				url.searchParams.set( 'before', jQuery( '#alg_wc_stock_snapshot_report_date_before' ).val() );
 				window.location.replace( url.href );
@@ -290,7 +316,7 @@ class Alg_WC_Stock_Snapshot_Settings_Report_Section extends Alg_WC_Stock_Snapsho
 	/**
 	 * get_menu.
 	 *
-	 * @version 2.1.0
+	 * @version 2.2.0
 	 * @since   2.1.0
 	 */
 	function get_menu() {
@@ -399,6 +425,39 @@ class Alg_WC_Stock_Snapshot_Settings_Report_Section extends Alg_WC_Stock_Snapsho
 					esc_attr( $cat_id ),
 					selected( $cat_id, $this->product_cat, false ),
 					esc_attr( $cat_title )
+				);
+			}
+
+			$secondary_menu .= '</select>';
+
+		}
+
+		// Report type
+		if ( $this->do_add_report_type_selector ) {
+
+			$secondary_menu .= sprintf(
+				'<select id="%s" class="%s">',
+				'alg_wc_stock_snapshot_report_type',
+				'wc-enhanced-select'
+			);
+
+			$report_type_options = array(
+				''          => __( 'All products', 'stock-snapshot-for-woocommerce' ),
+				'restocked' => __( 'Restocked products', 'stock-snapshot-for-woocommerce' ),
+			);
+			if (
+				alg_wc_stock_snapshot()->core->do_variations() &&
+				alg_wc_stock_snapshot()->core->do_count_children()
+			) {
+				$report_type_options['restocked_excl_variations'] = __( 'Restocked products (excl. variations)', 'stock-snapshot-for-woocommerce' );
+			}
+
+			foreach ( $report_type_options as $report_type_option_id => $report_type_option_title ) {
+				$secondary_menu .= sprintf(
+					'<option value="%s"%s>%s</option>',
+					esc_attr( $report_type_option_id ),
+					selected( $report_type_option_id, $this->report_type, false ),
+					esc_attr( $report_type_option_title )
 				);
 			}
 

@@ -2,8 +2,8 @@
 Contributors: wpcodefactory, algoritmika, anbinder, karzin, omardabbas
 Tags: woocommerce, stock, stock history, product stock, stock snapshot
 Requires at least: 5.0
-Tested up to: 6.7
-Stable tag: 2.1.1
+Tested up to: 6.8
+Stable tag: 2.2.0
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -43,6 +43,19 @@ Keep track of your products stock in WooCommerce.
 3. Start by visiting plugin settings at "WPFactory > Stock Snapshot".
 
 == Changelog ==
+
+= 2.2.0 - 25/06/2025 =
+* Fix - Translation loading fixed.
+* Fix - Report - Export - Double quotes replaced with single quotes.
+* Dev - Report - "Restocked" options added.
+* Dev - Report - "Product ID" and "Product type" columns added.
+* Dev - Emails - "Daily report emails" option added.
+* Dev - General - Extra data - Collect more data, e.g., request URI, order ID.
+* Dev - WPFactory Admin Menu - Plugin icon added.
+* Dev - WPFactory Admin Menu - Library updated.
+* Dev - WPFactory Key Manager - Library updated.
+* WC tested up to: 9.9.
+* Tested up to: 6.8.
 
 = 2.1.1 - 14/04/2025 =
 * Dev - Report - "General > Advanced Options > Prepare reports in background" option added (defaults to `no`).
