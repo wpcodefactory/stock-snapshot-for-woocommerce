@@ -1,5 +1,5 @@
 === Stock History & Reports Manager for WooCommerce ===
-Contributors: wpcodefactory, algoritmika, anbinder, karzin, omardabbas
+Contributors: wpcodefactory, anbinder, karzin, omardabbas
 Tags: woocommerce, stock, stock history, product stock, stock snapshot
 Requires at least: 5.0
 Tested up to: 6.8
@@ -43,6 +43,9 @@ Keep track of your products stock in WooCommerce.
 3. Start by visiting plugin settings at "WPFactory > Stock Snapshot".
 
 == Changelog ==
+
+= 2.2.1 - 29/08/2025 =
+* WC tested up to: 10.1.
 
 = 2.2.0 - 25/06/2025 =
 * Fix - Translation loading fixed.

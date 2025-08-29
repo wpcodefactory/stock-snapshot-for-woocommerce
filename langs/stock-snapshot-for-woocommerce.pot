@@ -2,8 +2,8 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Stock History & Reports Manager for WooCommerce 2.2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/stock-snapshot-for-woocommerce\n"
+"Project-Id-Version: Stock History & Reports Manager for WooCommerce Pro 2.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/stock-snapshot-for-woocommerce-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,28 +15,27 @@ msgstr ""
 "X-Domain: stock-snapshot-for-woocommerce\n"
 
 #. Plugin Name of the plugin
-#: stock-snapshot-for-woocommerce.php
-#: includes/class-alg-wc-stock-snapshot.php:242
-msgid "Stock History & Reports Manager for WooCommerce"
+#: stock-snapshot-for-woocommerce-pro.php
+msgid "Stock History & Reports Manager for WooCommerce Pro"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: stock-snapshot-for-woocommerce.php
+#: stock-snapshot-for-woocommerce-pro.php
 msgid "https://wpfactory.com/item/stock-snapshot-for-woocommerce/"
 msgstr ""
 
 #. Description of the plugin
-#: stock-snapshot-for-woocommerce.php
+#: stock-snapshot-for-woocommerce-pro.php
 msgid "Keep track of your products stock in WooCommerce."
 msgstr ""
 
 #. Author of the plugin
-#: stock-snapshot-for-woocommerce.php
+#: stock-snapshot-for-woocommerce-pro.php
 msgid "WPFactory"
 msgstr ""
 
 #. Author URI of the plugin
-#: stock-snapshot-for-woocommerce.php
+#: stock-snapshot-for-woocommerce-pro.php
 msgid "https://wpfactory.com"
 msgstr ""
 
@@ -251,6 +250,10 @@ msgstr ""
 
 #: includes/class-alg-wc-stock-snapshot.php:196
 msgid "Go Pro"
+msgstr ""
+
+#: includes/class-alg-wc-stock-snapshot.php:242
+msgid "Stock History & Reports Manager for WooCommerce"
 msgstr ""
 
 #. Translators: %1$d: Email ID, %2$s: Email subject.
