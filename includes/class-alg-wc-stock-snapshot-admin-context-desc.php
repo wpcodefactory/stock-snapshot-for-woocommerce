@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Admin Context Desc Class
  *
- * @version 2.2.0
+ * @version 2.2.2
  * @since   2.2.0
  *
  * @author  Algoritmika Ltd
@@ -106,7 +106,7 @@ class Alg_WC_Stock_Snapshot_Admin_Context_Desc {
 	/**
 	 * get_request_uri_desc.
 	 *
-	 * @version 2.2.0
+	 * @version 2.2.2
 	 * @since   2.2.0
 	 *
 	 * @todo    (v2.2.0) `return $data['request_uri'] . ' > ' . $data['post_type']`: better desc?
@@ -116,6 +116,17 @@ class Alg_WC_Stock_Snapshot_Admin_Context_Desc {
 
 		if ( ! isset( $data['request_uri'] ) ) {
 			return '';
+		}
+
+		$custom_desc = apply_filters(
+			'alg_wc_stock_snapshot_request_uri_desc',
+			false,
+			$data,
+			$product_id,
+			$is_short
+		);
+		if ( false !== $custom_desc ) {
+			return $custom_desc;
 		}
 
 		switch ( $data['request_uri'] ) {

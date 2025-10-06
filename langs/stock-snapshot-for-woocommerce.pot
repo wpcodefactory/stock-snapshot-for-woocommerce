@@ -2,35 +2,41 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: stock-snapshot-for-woocommerce 2.2.1\n"
+"Project-Id-Version: Stock History & Reports Manager for WooCommerce 2.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/stock-snapshot-for-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-08-29T22:30:57+02:00\n"
+"POT-Creation-Date: 2025-10-06T15:33:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.7.1\n"
+"X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: stock-snapshot-for-woocommerce\n"
 
 #. Plugin Name of the plugin
-msgid "Stock History & Reports Manager for WooCommerce Pro"
+#: stock-snapshot-for-woocommerce.php
+#: includes/class-alg-wc-stock-snapshot.php:242
+msgid "Stock History & Reports Manager for WooCommerce"
 msgstr ""
 
 #. Plugin URI of the plugin
+#: stock-snapshot-for-woocommerce.php
 msgid "https://wpfactory.com/item/stock-snapshot-for-woocommerce/"
 msgstr ""
 
 #. Description of the plugin
+#: stock-snapshot-for-woocommerce.php
 msgid "Keep track of your products stock in WooCommerce."
 msgstr ""
 
 #. Author of the plugin
+#: stock-snapshot-for-woocommerce.php
 msgid "WPFactory"
 msgstr ""
 
 #. Author URI of the plugin
+#: stock-snapshot-for-woocommerce.php
 msgid "https://wpfactory.com"
 msgstr ""
 
@@ -54,77 +60,77 @@ msgstr ""
 msgid "URL snapshot"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:127
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:138
 msgid "checkout"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:128
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:139
 msgid "checkout page"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:137
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:207
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:148
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:218
 msgid "order edit"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:138
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:208
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:149
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:219
 msgid "order edit page"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:145
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:215
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:156
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:226
 msgid "product edit"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:146
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:216
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:157
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:227
 msgid "product edit page"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:162
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:173
 msgid "Tom's product editor"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:172
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:183
 msgid "save variations"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:176
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:187
 msgid "BEAR bulk editor"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:180
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:191
 msgid "save items"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:184
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:195
 msgid "refund items"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:188
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:194
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:199
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:205
 msgid "AJAX"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:227
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:238
 msgid "barcode scanner"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:238
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:249
 msgid "frontend stock update"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:251
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:262
 msgid "frontend stock update (variation)"
 msgstr ""
 
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:264
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:275
 msgid "action scheduler"
 msgstr ""
 
 #. Translators: %d: Order ID.
-#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:306
+#: includes/class-alg-wc-stock-snapshot-admin-context-desc.php:317
 msgid "order #%d"
 msgstr ""
 
@@ -245,10 +251,6 @@ msgstr ""
 
 #: includes/class-alg-wc-stock-snapshot.php:196
 msgid "Go Pro"
-msgstr ""
-
-#: includes/class-alg-wc-stock-snapshot.php:242
-msgid "Stock History & Reports Manager for WooCommerce"
 msgstr ""
 
 #. Translators: %1$d: Email ID, %2$s: Email subject.
