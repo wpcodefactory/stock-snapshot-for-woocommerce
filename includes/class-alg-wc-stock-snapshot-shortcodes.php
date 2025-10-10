@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Pro - Shortcodes Class
  *
- * @version 2.1.0
+ * @version 2.2.3
  * @since   1.2.0
  *
  * @author  Algoritmika Ltd
@@ -30,7 +30,7 @@ class Alg_WC_Stock_Snapshot_Shortcodes {
 	/**
 	 * stock_snapshot_restocked_shortcode.
 	 *
-	 * @version 2.1.0
+	 * @version 2.2.3
 	 * @since   1.1.0
 	 *
 	 * @see     https://github.com/woocommerce/woocommerce/wiki/wc_get_products-and-WC_Product_Query
@@ -49,7 +49,8 @@ class Alg_WC_Stock_Snapshot_Shortcodes {
 	 */
 	function stock_snapshot_restocked_shortcode( $atts, $content = '' ) {
 		// Atts
-		$atts = shortcode_atts( array(
+		$atts = shortcode_atts(
+			array(
 				'min_stock_diff'    => 1,
 				'columns'           => 4,
 				'paginate'          => 'no',
@@ -58,29 +59,35 @@ class Alg_WC_Stock_Snapshot_Shortcodes {
 				'orderby'           => 'name',
 				'order'             => 'ASC',
 				'not_found_msg'     => '<p>' . __( 'No restocked products found.', 'stock-snapshot-for-woocommerce' ) . '</p>',
-			), $atts, 'alg_wc_stock_snapshot_restocked' );
+			),
+			$atts,
+			'alg_wc_stock_snapshot_restocked'
+		);
 		if ( isset( $_REQUEST['pwb-brand-filter'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$atts['pwb-brand-filter'] = sanitize_text_field( wp_unslash( $_REQUEST['pwb-brand-filter'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 		// Get products
 		$transient_params = base64_encode( http_build_query( $atts, '', ',' ) );
-		if ( false === ( $transient = get_transient( 'alg_wc_stock_snapshot_restocked' ) ) || ! isset( $transient[ $transient_params ] ) ) {
+		if (
+			false === ( $transient = get_transient( 'alg_wc_stock_snapshot_restocked' ) ) ||
+			! isset( $transient[ $transient_params ] )
+		) {
 			// Product query args
 			$query_args = array(
-					'limit'        => -1,
-					'return'       => 'ids',
-					'orderby'      => ( 'last_restocked' === $atts['orderby'] ? 'name' : $atts['orderby'] ),
-					'order'        => ( 'last_restocked' === $atts['orderby'] ? 'ASC'  : $atts['order'] ),
-					'stock_status' => 'instock',
-				);
+				'limit'        => -1,
+				'return'       => 'ids',
+				'orderby'      => ( 'last_restocked' === $atts['orderby'] ? 'name' : $atts['orderby'] ),
+				'order'        => ( 'last_restocked' === $atts['orderby'] ? 'ASC'  : $atts['order'] ),
+				'stock_status' => 'instock',
+			);
 			if ( isset( $atts['pwb-brand-filter'] ) ) {
 				$query_args['tax_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-						array(
-							'taxonomy' => 'pwb-brand',
-							'field'    => 'slug',
-							'terms'    => explode( ',', $atts['pwb-brand-filter'] ),
-						),
-					);
+					array(
+						'taxonomy' => 'pwb-brand',
+						'field'    => 'slug',
+						'terms'    => explode( ',', $atts['pwb-brand-filter'] ),
+					),
+				);
 			}
 			// Products loop
 			$products = array();
@@ -96,7 +103,10 @@ class Alg_WC_Stock_Snapshot_Shortcodes {
 							$stock[0]['stock'] :
 							$stock[0]
 						);
-						if ( 'yes' === $atts['new_stock'] && $_stock > 0 ) {
+						if (
+							'yes' === $atts['new_stock'] &&
+							$_stock > 0
+						) {
 							$products[] = array(
 								'product_id' => $product_id,
 								'time'       => $time[0],
@@ -171,7 +181,7 @@ class Alg_WC_Stock_Snapshot_Shortcodes {
 				']'
 			);
 		} else {
-			return $atts['not_found_msg'];
+			return wp_kses_post( $atts['not_found_msg'] );
 		}
 	}
 

@@ -3,7 +3,7 @@
 Plugin Name: Stock History & Reports Manager for WooCommerce
 Plugin URI: https://wpfactory.com/item/stock-snapshot-for-woocommerce/
 Description: Keep track of your products stock in WooCommerce.
-Version: 2.2.2
+Version: 2.2.3
 Author: WPFactory
 Author URI: https://wpfactory.com
 Text Domain: stock-snapshot-for-woocommerce
@@ -36,7 +36,7 @@ if ( 'stock-snapshot-for-woocommerce.php' === basename( __FILE__ ) ) {
 	}
 }
 
-defined( 'ALG_WC_STOCK_SNAPSHOT_VERSION' ) || define( 'ALG_WC_STOCK_SNAPSHOT_VERSION', '2.2.2' );
+defined( 'ALG_WC_STOCK_SNAPSHOT_VERSION' ) || define( 'ALG_WC_STOCK_SNAPSHOT_VERSION', '2.2.3' );
 
 defined( 'ALG_WC_STOCK_SNAPSHOT_FILE' ) || define( 'ALG_WC_STOCK_SNAPSHOT_FILE', __FILE__ );
 
