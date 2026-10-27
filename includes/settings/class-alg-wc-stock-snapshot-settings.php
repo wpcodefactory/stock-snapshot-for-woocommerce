@@ -5,123 +5,128 @@
  * @version 2.1.0
  * @since   1.0.0
  *
- * @author  Algoritmika Ltd
+ * @author WPFactory
+ *
+ * @package WPFactory\WC_Stock_Snapshot\Settings
  */
 
 defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Settings' ) ) :
 
-class Alg_WC_Stock_Snapshot_Settings extends WC_Settings_Page {
-
 	/**
-	 * Constructor.
+	 * Alg_WC_Stock_Snapshot_Settings class.
 	 *
 	 * @version 2.1.0
 	 * @since   1.0.0
 	 */
-	function __construct() {
+	class Alg_WC_Stock_Snapshot_Settings extends WC_Settings_Page {
 
-		$this->id    = 'alg_wc_stock_snapshot';
-		$this->label = __( 'Stock Snapshot', 'stock-snapshot-for-woocommerce' );
-		parent::__construct();
+		/**
+		 * Constructor.
+		 *
+		 * @version 2.1.0
+		 * @since   1.0.0
+		 */
+		public function __construct() {
+			$this->id    = 'alg_wc_stock_snapshot';
+			$this->label = __( 'Stock Snapshot', 'stock-snapshot-for-woocommerce' );
 
-		// Sections
-		require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-section.php';
-		require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-report-section.php';
-		require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-general.php';
-		require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-tools.php';
-		require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-report.php';
-		require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-history.php';
-		require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-emails.php';
+			parent::__construct();
 
-	}
-
-	/**
-	 * get_settings.
-	 *
-	 * @version 2.1.0
-	 * @since   1.0.0
-	 */
-	function get_settings() {
-		global $current_section;
-
-		if ( 'report' === $current_section ) {
-			global $hide_save_button;
-			$hide_save_button = true;
-			return apply_filters( 'woocommerce_get_settings_' . $this->id . '_' . $current_section, array() );
+			// Sections.
+			require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-section.php';
+			require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-report-section.php';
+			require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-general.php';
+			require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-tools.php';
+			require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-report.php';
+			require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-history.php';
+			require_once plugin_dir_path( __FILE__ ) . 'class-alg-wc-stock-snapshot-settings-emails.php';
 		}
 
-		return array_merge(
-			apply_filters( 'woocommerce_get_settings_' . $this->id . '_' . $current_section, array() ),
-			array(
-				array(
-					'title'     => __( 'Reset Settings', 'stock-snapshot-for-woocommerce' ),
-					'type'      => 'title',
-					'id'        => $this->id . '_' . $current_section . '_reset_options',
-				),
-				array(
-					'title'     => __( 'Reset section settings', 'stock-snapshot-for-woocommerce' ),
-					'desc'      => '<strong>' . __( 'Reset', 'stock-snapshot-for-woocommerce' ) . '</strong>',
-					'desc_tip'  => __( 'Check the box and save changes to reset.', 'stock-snapshot-for-woocommerce' ),
-					'id'        => $this->id . '_' . $current_section . '_reset',
-					'default'   => 'no',
-					'type'      => 'checkbox',
-				),
-				array(
-					'type'      => 'sectionend',
-					'id'        => $this->id . '_' . $current_section . '_reset_options',
-				),
-			)
-		);
+		/**
+		 * Get settings.
+		 *
+		 * @version 2.1.0
+		 * @since   1.0.0
+		 */
+		public function get_settings() {
+			global $current_section;
 
-	}
-
-	/**
-	 * maybe_reset_settings.
-	 *
-	 * @version 1.0.0
-	 * @since   1.0.0
-	 */
-	function maybe_reset_settings() {
-		global $current_section;
-		if ( 'yes' === get_option( $this->id . '_' . $current_section . '_reset', 'no' ) ) {
-			foreach ( $this->get_settings() as $value ) {
-				if ( isset( $value['id'] ) ) {
-					$id = explode( '[', $value['id'] );
-					delete_option( $id[0] );
-				}
+			if ( 'report' === $current_section ) {
+				global $hide_save_button;
+				$hide_save_button = true; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+				return apply_filters( 'woocommerce_get_settings_' . $this->id . '_' . $current_section, array() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 			}
-			add_action( 'admin_notices', array( $this, 'admin_notices_settings_reset_success' ), PHP_INT_MAX );
+
+			return array_merge(
+				apply_filters( 'woocommerce_get_settings_' . $this->id . '_' . $current_section, array() ), // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+				array(
+					array(
+						'title' => __( 'Reset Settings', 'stock-snapshot-for-woocommerce' ),
+						'type'  => 'title',
+						'id'    => $this->id . '_' . $current_section . '_reset_options',
+					),
+					array(
+						'title'    => __( 'Reset section settings', 'stock-snapshot-for-woocommerce' ),
+						'desc'     => '<strong>' . __( 'Reset', 'stock-snapshot-for-woocommerce' ) . '</strong>',
+						'desc_tip' => __( 'Check the box and save changes to reset.', 'stock-snapshot-for-woocommerce' ),
+						'id'       => $this->id . '_' . $current_section . '_reset',
+						'default'  => 'no',
+						'type'     => 'checkbox',
+					),
+					array(
+						'type' => 'sectionend',
+						'id'   => $this->id . '_' . $current_section . '_reset_options',
+					),
+				)
+			);
+		}
+
+		/**
+		 * Maybe reset settings.
+		 *
+		 * @version 1.0.0
+		 * @since   1.0.0
+		 */
+		public function maybe_reset_settings() {
+			global $current_section;
+			if ( 'yes' === get_option( $this->id . '_' . $current_section . '_reset', 'no' ) ) {
+				foreach ( $this->get_settings() as $value ) {
+					if ( isset( $value['id'] ) ) {
+						$id = explode( '[', $value['id'] );
+						delete_option( $id[0] );
+					}
+				}
+				add_action( 'admin_notices', array( $this, 'admin_notices_settings_reset_success' ), PHP_INT_MAX );
+			}
+		}
+
+		/**
+		 * Admin notices settings reset success.
+		 *
+		 * @version 1.2.0
+		 * @since   1.0.0
+		 */
+		public function admin_notices_settings_reset_success() {
+			echo '<div class="notice notice-success is-dismissible"><p><strong>' .
+				esc_html__( 'Your settings have been reset.', 'stock-snapshot-for-woocommerce' ) .
+			'</strong></p></div>';
+		}
+
+		/**
+		 * Save.
+		 *
+		 * @version 1.6.0
+		 * @since   1.0.0
+		 */
+		public function save() {
+			parent::save();
+			do_action( 'alg_wc_stock_snapshot_settings_saved' );
+			$this->maybe_reset_settings();
+			do_action( 'alg_wc_stock_snapshot_after_settings_saved' );
 		}
 	}
-
-	/**
-	 * admin_notices_settings_reset_success.
-	 *
-	 * @version 1.2.0
-	 * @since   1.0.0
-	 */
-	function admin_notices_settings_reset_success() {
-		echo '<div class="notice notice-success is-dismissible"><p><strong>' .
-			esc_html__( 'Your settings have been reset.', 'stock-snapshot-for-woocommerce' ) .
-		'</strong></p></div>';
-	}
-
-	/**
-	 * save.
-	 *
-	 * @version 1.6.0
-	 * @since   1.0.0
-	 */
-	function save() {
-		parent::save();
-		do_action( 'alg_wc_stock_snapshot_settings_saved' );
-		$this->maybe_reset_settings();
-		do_action( 'alg_wc_stock_snapshot_after_settings_saved' );
-	}
-
-}
 
 endif;
 

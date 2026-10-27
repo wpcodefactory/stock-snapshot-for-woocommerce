@@ -1,9 +1,10 @@
 === Stock History & Reports Manager for WooCommerce ===
 Contributors: wpcodefactory, anbinder, karzin, omardabbas
 Tags: woocommerce, stock, stock history, product stock, stock snapshot
-Requires at least: 5.0
-Tested up to: 7.0
-Stable tag: 2.2.4
+Requires at least: 5.3
+Tested up to: 7.1
+Requires PHP: 7.4
+Stable tag: 2.3.0
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -44,9 +45,23 @@ Keep track of your products stock in WooCommerce.
 
 == Changelog ==
 
+= 2.3.0 - 27/10/2026 =
+* Dev - Output escaped.
+* Dev - Shortcode attributes sanitized.
+* Dev - JavaScript and CSS code enqueuing improved.
+* Dev - Code refactoring.
+* Dev - Coding standards improved.
+* Dev - WPFactory Admin Menu - Library updated (to v1.1.4).
+* Dev - WPFactory Cross-Selling - Library updated (to v1.1.7).
+* Dev - WPFactory Key Manager - Library updated (to v1.1.1).
+* WC tested up to: 11.2.
+* Tested up to: 7.1.
+* Requires at least: 5.3.
+* Requires PHP: 7.4.
+
 = 2.2.4 - 24/05/2026 =
-* Tested up to: 7.0.
 * WC tested up to: 10.7.
+* Tested up to: 7.0.
 
 = 2.2.3 - 10/10/2025 =
 * Fix - Security - Shortcodes - `[alg_wc_stock_snapshot_restocked]` - Cross-site scripting vulnerability fixed.
