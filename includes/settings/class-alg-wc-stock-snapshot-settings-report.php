@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Report Section Settings
  *
- * @version 2.3.0
+ * @version 2.3.1
  * @since   2.1.0
  *
  * @author WPFactory
@@ -17,7 +17,7 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Settings_Report' ) ) :
 	/**
 	 * Alg_WC_Stock_Snapshot_Settings_Report class.
 	 *
-	 * @version 2.3.0
+	 * @version 2.3.1
 	 * @since   2.1.0
 	 */
 	class Alg_WC_Stock_Snapshot_Settings_Report extends Alg_WC_Stock_Snapshot_Settings_Report_Section {
@@ -361,7 +361,7 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Settings_Report' ) ) :
 		/**
 		 * Get data.
 		 *
-		 * @version 2.3.0
+		 * @version 2.3.1
 		 * @since   2.1.0
 		 *
 		 * @param string $output_type Output type: 'html', 'email', 'csv'.
@@ -524,10 +524,22 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Settings_Report' ) ) :
 				} else { // 'csv'
 					$result = array();
 
-					$result[] = '"' . implode( '","', $head ) . '"';
+					$result[] = implode(
+						',',
+						array_map(
+							array( 'Alg_WC_Stock_Snapshot_Admin', 'prepare_csv_value' ),
+							$head
+						)
+					);
 
 					foreach ( $rows as $row ) {
-						$result[] = '"' . implode( '","', str_replace( '"', '\'', $row ) ) . '"';
+						$result[] = implode(
+							',',
+							array_map(
+								array( 'Alg_WC_Stock_Snapshot_Admin', 'prepare_csv_value' ),
+								$row
+							)
+						);
 					}
 
 					$result = implode( PHP_EOL, $result );

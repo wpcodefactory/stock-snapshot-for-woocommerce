@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Main Class
  *
- * @version 2.3.0
+ * @version 2.3.1
  * @since   1.0.0
  *
  * @author WPFactory
@@ -17,7 +17,7 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot' ) ) :
 	/**
 	 * Alg_WC_Stock_Snapshot class.
 	 *
-	 * @version 2.3.0
+	 * @version 2.3.1
 	 * @since   1.0.0
 	 */
 	final class Alg_WC_Stock_Snapshot {
@@ -261,12 +261,16 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot' ) ) :
 		/**
 		 * Version updated.
 		 *
-		 * @version 1.0.0
+		 * @version 2.3.1
 		 * @since   1.0.0
 		 *
 		 * @todo (dev) Delete transients?
 		 */
 		public function version_updated() {
+			if ( false === get_option( 'alg_wc_stock_snapshot_url_secret', false ) ) {
+				update_option( 'alg_wc_stock_snapshot_url_secret', wp_generate_password( 32, false ) );
+			}
+
 			update_option( 'alg_wc_stock_snapshot_version', $this->version );
 		}
 

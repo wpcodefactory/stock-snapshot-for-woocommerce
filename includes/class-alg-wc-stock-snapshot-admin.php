@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Admin Class
  *
- * @version 2.3.0
+ * @version 2.3.1
  * @since   1.2.0
  *
  * @author WPFactory
@@ -17,7 +17,7 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Admin' ) ) :
 	/**
 	 * Alg_WC_Stock_Snapshot_Admin class.
 	 *
-	 * @version 2.3.0
+	 * @version 2.3.1
 	 * @since   1.2.0
 	 */
 	class Alg_WC_Stock_Snapshot_Admin {
@@ -139,7 +139,7 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Admin' ) ) :
 		/**
 		 * Export CSV.
 		 *
-		 * @version 2.3.0
+		 * @version 2.3.1
 		 * @since   1.5.0
 		 */
 		public function export_csv() {
@@ -177,22 +177,22 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Admin' ) ) :
 			if ( $this->get_core()->do_extra_data() ) {
 				// Extra data.
 				$csv[] = sprintf(
-					'%s,%s,%s,%s,%s',
-					esc_html__( 'Date', 'stock-snapshot-for-woocommerce' ),
-					esc_html__( 'Time', 'stock-snapshot-for-woocommerce' ),
-					esc_html__( 'Stock', 'stock-snapshot-for-woocommerce' ),
-					esc_html__( 'Action', 'stock-snapshot-for-woocommerce' ),
-					esc_html__( 'Context', 'stock-snapshot-for-woocommerce' ),
-					esc_html__( 'Order ID', 'stock-snapshot-for-woocommerce' ),
-					esc_html__( 'User', 'stock-snapshot-for-woocommerce' )
+					'%s,%s,%s,%s,%s,%s,%s',
+					self::prepare_csv_value( esc_html__( 'Date', 'stock-snapshot-for-woocommerce' ) ),
+					self::prepare_csv_value( esc_html__( 'Time', 'stock-snapshot-for-woocommerce' ) ),
+					self::prepare_csv_value( esc_html__( 'Stock', 'stock-snapshot-for-woocommerce' ) ),
+					self::prepare_csv_value( esc_html__( 'Action', 'stock-snapshot-for-woocommerce' ) ),
+					self::prepare_csv_value( esc_html__( 'Context', 'stock-snapshot-for-woocommerce' ) ),
+					self::prepare_csv_value( esc_html__( 'Order ID', 'stock-snapshot-for-woocommerce' ) ),
+					self::prepare_csv_value( esc_html__( 'User', 'stock-snapshot-for-woocommerce' ) )
 				);
 			} else {
 				// Simple.
 				$csv[] = sprintf(
 					'%s,%s,%s',
-					esc_html__( 'Date', 'stock-snapshot-for-woocommerce' ),
-					esc_html__( 'Time', 'stock-snapshot-for-woocommerce' ),
-					esc_html__( 'Stock', 'stock-snapshot-for-woocommerce' )
+					self::prepare_csv_value( esc_html__( 'Date', 'stock-snapshot-for-woocommerce' ) ),
+					self::prepare_csv_value( esc_html__( 'Time', 'stock-snapshot-for-woocommerce' ) ),
+					self::prepare_csv_value( esc_html__( 'Stock', 'stock-snapshot-for-woocommerce' ) )
 				);
 			}
 			$stock_snapshot = $product->get_meta( '_alg_wc_stock_snapshot' );
@@ -204,22 +204,22 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Admin' ) ) :
 					if ( $this->get_core()->do_extra_data() ) {
 						// Extra data.
 						$csv[] = sprintf(
-							'%s,%s,%s,%s,%s',
-							$formatted_date,
-							$formatted_time,
-							$_stock,
-							( is_array( $stock ) ? '"' . $this->context_desc->get_hook_desc( $stock ) . '"' : '' ),
-							( is_array( $stock ) ? '"' . $this->context_desc->get_request_uri_desc( $stock, $product_id ) . '"' : '' ),
-							( is_array( $stock ) ? '"' . $this->context_desc->get_order_id_desc( $stock ) . '"' : '' ),
-							( is_array( $stock ) ? '"' . $this->get_user_desc( $stock['user_id'] ) . '"' : '' )
+							'%s,%s,%s,%s,%s,%s,%s',
+							self::prepare_csv_value( $formatted_date ),
+							self::prepare_csv_value( $formatted_time ),
+							self::prepare_csv_value( $_stock ),
+							self::prepare_csv_value( ( is_array( $stock ) ? $this->context_desc->get_hook_desc( $stock ) : '' ) ),
+							self::prepare_csv_value( ( is_array( $stock ) ? $this->context_desc->get_request_uri_desc( $stock, $product_id ) : '' ) ),
+							self::prepare_csv_value( ( is_array( $stock ) ? $this->context_desc->get_order_id_desc( $stock ) : '' ) ),
+							self::prepare_csv_value( ( is_array( $stock ) ? $this->get_user_desc( $stock['user_id'] ) : '' ) )
 						);
 					} else {
 						// Simple.
 						$csv[] = sprintf(
 							'%s,%s,%s',
-							$formatted_date,
-							$formatted_time,
-							$_stock,
+							self::prepare_csv_value( $formatted_date ),
+							self::prepare_csv_value( $formatted_time ),
+							self::prepare_csv_value( $_stock )
 						);
 					}
 				}
@@ -237,6 +237,20 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Admin' ) ) :
 			header( 'Content-Length: ' . strlen( $csv ) );
 			echo $csv; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			die();
+		}
+
+		/**
+		 * Prepare CSV value.
+		 *
+		 * @version 2.3.1
+		 * @since   2.3.1
+		 *
+		 * @param string $value Value to prepare.
+		 *
+		 * @return string Prepared CSV value.
+		 */
+		public static function prepare_csv_value( $value ) {
+			return '"' . str_replace( '"', '""', (string) $value ) . '"';
 		}
 
 		/**

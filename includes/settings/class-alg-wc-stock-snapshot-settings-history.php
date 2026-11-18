@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - History Section Settings
  *
- * @version 2.3.0
+ * @version 2.3.1
  * @since   1.2.0
  *
  * @author WPFactory
@@ -17,7 +17,7 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Settings_History' ) ) :
 	/**
 	 * Alg_WC_Stock_Snapshot_Settings_History class.
 	 *
-	 * @version 2.3.0
+	 * @version 2.3.1
 	 * @since   1.2.0
 	 */
 	class Alg_WC_Stock_Snapshot_Settings_History extends Alg_WC_Stock_Snapshot_Settings_Report_Section {
@@ -53,7 +53,7 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Settings_History' ) ) :
 		/**
 		 * Get data.
 		 *
-		 * @version 2.3.0
+		 * @version 2.3.1
 		 * @since   1.2.0
 		 *
 		 * @param string $output_type Output type.
@@ -163,9 +163,12 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Settings_History' ) ) :
 					} else { // 'csv'
 						$rows[] = implode(
 							',',
-							array_merge(
-								array( 'product_id' => $prefix . $title ),
-								array_reverse( $row )
+							array_map(
+								array( 'Alg_WC_Stock_Snapshot_Admin', 'prepare_csv_value' ),
+								array_merge(
+									array( 'product_id' => $prefix . $title ),
+									array_reverse( $row )
+								)
 							)
 						);
 					}
@@ -206,9 +209,12 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Settings_History' ) ) :
 							array(
 								implode(
 									',',
-									array_merge(
-										array( '' ),
-										$head
+									array_map(
+										array( 'Alg_WC_Stock_Snapshot_Admin', 'prepare_csv_value' ),
+										array_merge(
+											array( '' ),
+											$head
+										)
 									)
 								),
 							),

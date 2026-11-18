@@ -3,13 +3,13 @@
  * Plugin Name: Stock History & Reports Manager for WooCommerce
  * Plugin URI: https://wpfactory.com/item/stock-snapshot-for-woocommerce/
  * Description: Keep track of your products stock in WooCommerce.
- * Version: 2.3.0
+ * Version: 2.3.1
  * Author: WPFactory
  * Author URI: https://wpfactory.com
  * Requires PHP: 7.4
  * Text Domain: stock-snapshot-for-woocommerce
  * Domain Path: /langs
- * WC tested up to: 11.2
+ * WC tested up to: 11.3
  * Requires Plugins: woocommerce
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -48,7 +48,7 @@ if ( 'stock-snapshot-for-woocommerce.php' === basename( __FILE__ ) ) {
 /**
  * Plugin version.
  */
-defined( 'ALG_WC_STOCK_SNAPSHOT_VERSION' ) || define( 'ALG_WC_STOCK_SNAPSHOT_VERSION', '2.3.0' );
+defined( 'ALG_WC_STOCK_SNAPSHOT_VERSION' ) || define( 'ALG_WC_STOCK_SNAPSHOT_VERSION', '2.3.1' );
 
 /**
  * Plugin file.

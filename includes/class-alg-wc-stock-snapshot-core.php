@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - Core Class
  *
- * @version 2.3.0
+ * @version 2.3.1
  * @since   1.0.0
  *
  * @author WPFactory
@@ -17,7 +17,7 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Core' ) ) :
 	/**
 	 * Alg_WC_Stock_Snapshot_Core class.
 	 *
-	 * @version 2.3.0
+	 * @version 2.3.1
 	 * @since   1.0.0
 	 */
 	class Alg_WC_Stock_Snapshot_Core {
@@ -215,13 +215,19 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Core' ) ) :
 		/**
 		 * Snapshot via URL.
 		 *
-		 * @version 1.2.0
+		 * @version 2.3.1
 		 * @since   1.2.0
 		 */
 		public function snapshot_via_url() {
-			if ( isset( $_GET['alg_wc_stock_snapshot'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$this->take_stock_snapshot();
+			if ( ! isset( $_GET['alg_wc_stock_snapshot'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				return;
 			}
+
+			if ( sanitize_text_field( wp_unslash( $_GET['alg_wc_stock_snapshot'] ) ) !== get_option( 'alg_wc_stock_snapshot_url_secret', '' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				die( esc_html__( 'Invalid URL secret key.', 'stock-snapshot-for-woocommerce' ) );
+			}
+
+			$this->take_stock_snapshot();
 		}
 
 		/**

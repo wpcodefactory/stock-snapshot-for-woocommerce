@@ -2,7 +2,7 @@
 /**
  * Stock Snapshot for WooCommerce - General Section Settings
  *
- * @version 2.3.0
+ * @version 2.3.1
  * @since   1.0.0
  *
  * @author WPFactory
@@ -17,7 +17,7 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Settings_General' ) ) :
 	/**
 	 * Alg_WC_Stock_Snapshot_Settings_General class.
 	 *
-	 * @version 2.3.0
+	 * @version 2.3.1
 	 * @since   1.0.0
 	 */
 	class Alg_WC_Stock_Snapshot_Settings_General extends Alg_WC_Stock_Snapshot_Settings_Section {
@@ -96,7 +96,7 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Settings_General' ) ) :
 		/**
 		 * Get settings.
 		 *
-		 * @version 2.1.1
+		 * @version 2.3.1
 		 * @since   1.0.0
 		 *
 		 * @todo (dev) `alg_wc_stock_snapshot_action_scheduler`: Default to `no`?
@@ -131,11 +131,24 @@ if ( ! class_exists( 'Alg_WC_Stock_Snapshot_Settings_General' ) ) :
 					'desc_tip' => sprintf(
 						/* Translators: %s: URL. */
 						__( 'If enabled, you can take the snapshot with %s', 'stock-snapshot-for-woocommerce' ),
-						'<code>' . add_query_arg( 'alg_wc_stock_snapshot', true, site_url() ) . '</code>'
+						'<code>' .
+							add_query_arg(
+								'alg_wc_stock_snapshot',
+								get_option( 'alg_wc_stock_snapshot_url_secret', '' ),
+								site_url()
+							) .
+						'</code>'
 					),
 					'id'       => 'alg_wc_stock_snapshot_url',
 					'default'  => 'no',
 					'type'     => 'checkbox',
+				),
+				array(
+					'desc'     => __( 'URL secret key', 'stock-snapshot-for-woocommerce' ),
+					'desc_tip' => __( 'Secret key for taking snapshots via URL.', 'stock-snapshot-for-woocommerce' ),
+					'type'     => 'text',
+					'id'       => 'alg_wc_stock_snapshot_url_secret',
+					'default'  => '',
 				),
 				array(
 					'type' => 'sectionend',

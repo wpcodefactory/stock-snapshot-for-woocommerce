@@ -4,7 +4,7 @@ Tags: woocommerce, stock, stock history, product stock, stock snapshot
 Requires at least: 5.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.3.0
+Stable tag: 2.3.1
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -44,6 +44,12 @@ Keep track of your products stock in WooCommerce.
 3. Start by visiting plugin settings at "WPFactory > Stock Snapshot".
 
 == Changelog ==
+
+= 2.3.1 - 18/11/2026 =
+* Fix - Export CSV - "Order ID" and "User" columns added.
+* Fix - Export CSV - CSV values prepared.
+* Dev - Allow snapshots via URL - "URL secret key" added.
+* WC tested up to: 11.3.
 
 = 2.3.0 - 27/10/2026 =
 * Dev - Output escaped.
