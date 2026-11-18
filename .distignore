@@ -6,6 +6,7 @@
 .distignore
 .eslintrc.js
 .gitignore
+.gitattributes
 Makefile
 package.json
 package-lock.json
